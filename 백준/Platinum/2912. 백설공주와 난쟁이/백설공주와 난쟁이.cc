@@ -24,7 +24,7 @@ typedef pair<int, int> P;
 
 int n,c,q;
 int a[300005];
-vector<int> bucket(605, -1); // {과반수 값, 등장 횟수}
+vector<int> bucket(605, -1);
 int bucketcnt[605][10005];
 int bucketpsum[605][10005];
 vector<P> p;
@@ -87,10 +87,8 @@ signed main()
             }
         }
 
-//        cout<<sbucket<<" "<<ebucket<<endl;
         int ans = -1;
         for (auto x:hubo) {
-//            cout<<x<<":"<<cnt[x]<<endl;
             if (cnt[x] > (e-s+1)/2) {
                 ans = x;
                 break;
