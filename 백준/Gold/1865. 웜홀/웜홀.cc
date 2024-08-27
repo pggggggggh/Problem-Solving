@@ -27,8 +27,7 @@ void solve() {
         for (int t = 0; t < n; t++) {
             bool updated = false;
             for (auto &e: E) {
-                if (dist[e.from] != 1e9 && dist[e.from] + e.cost < dist[e.to]
-                ) {
+                if (dist[e.from] + e.cost < dist[e.to]) {
                     if (t == n - 1) return 1;
                     dist[e.to] = dist[e.from] + e.cost;
                     updated = true;
