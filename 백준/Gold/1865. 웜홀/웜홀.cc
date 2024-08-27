@@ -21,9 +21,8 @@ void solve() {
         else E.push_back({b, a, c}); // roads are undirected
         E.push_back({a, b, c});
     }
-    auto bellman = [&](int v) -> int {
+    auto bellman = [&]() -> int {
         vector<int> dist(n, 1e9);
-        dist[v] = 0;
         for (int t = 0; t < n; t++) {
             bool updated = false;
             for (auto &e: E) {
@@ -38,13 +37,7 @@ void solve() {
         return 0;
     };
     int ans = 0;
-    for (int i = 0; i < n; i++) {
-        if (bellman(i)) {
-            ans = 1;
-            break;
-        }
-    }
-    cout << (ans ? "YES" : "NO") << '\n';
+    cout << (bellman() ? "YES" : "NO") << '\n';
 }
 
 signed main() {
