@@ -20,7 +20,7 @@ struct strongly_connected {
 
     vector<int> get_scc() {
         vector<int> dfn(n, -1);
-        vector<int> sn(n, -1);
+        vector<int> sn(n, -1); // 0 ~ n-1 : topological order
         vector<vector<int> > scc;
         int cnt = 0, scnt = 0;
         stack<int> stk;
@@ -84,6 +84,8 @@ struct twosat {
 };
 
 signed main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
     int n, m;
     cin >> n >> m;
     twosat twosat(n);
