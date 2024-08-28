@@ -51,9 +51,35 @@ struct bcc {
         for (int i = 0; i < n; i++) if (dfn[i] == -1) dfs(i, 0);
         return bn;
     }
+
+    vector<int> get_articulation_points() {
+        vector<set<int> > bn = get_bcc();
+        vector<int> res;
+        for (int i = 0; i < n; i++) if (bn[i].size() > 1) res.push_back(i);
+        return res;
+    }
+
+    vector<pi> get_bridges() {
+        vector<set<int> > bn = get_bcc();
+        vector<vector<int> > cmp(n);
+        vector<pi> res;
+        int mx = 0;
+        for (int i = 0; i < n; i++) {
+            for (auto &x: bn[i]) {
+                mx = max(mx, x);
+                cmp[x].push_back(i);
+            }
+        }
+        for (int i = 0; i <= mx; i++) {
+            if (cmp[i].size() == 2) res.push_back(pair(min(cmp[i][0], cmp[i][1]), max(cmp[i][0], cmp[i][1])));
+        }
+        return res;
+    }
 };
 
 signed main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
     int n, m;
     cin >> n >> m;
     bcc bcc(n);
@@ -64,11 +90,8 @@ signed main() {
         y--;
         bcc.add_edge(x, y);
     }
-    auto bn = bcc.get_bcc();
-    vector<int> cut;
-    for (int i = 0; i < n; i++) {
-        if (bn[i].size() > 1) cut.push_back(i);
-    }
+    vector<int> cut = bcc.get_articulation_points();
+    sort(all(cut));
     cout << cut.size() << '\n';
     for (auto &x: cut) cout << x + 1 << ' ';
 }
