@@ -6,12 +6,11 @@ using pi = pair<int,int>;
 
 struct suffix_array {
     vector<int> sa, lcp;
-    // both include empty prefix at index 0, lcp[x] = lcp of sa[x], sa[x-1]
 
-    suffix_array(vector<int> &s, int lim = 200001) {
+    suffix_array(vector<int> &s, int lim = 200000) {
         int n = s.size() + 1, k = 0, a, b;
         vector<int> x(n), y(n), ws(max(n, lim)), rank(n);
-        for (int i = 0; i < s.size(); i++) x[i] = s[i];
+        for (int i = 0; i < n - 1; i++) x[i] = s[i];
         sa = lcp = y, iota(all(sa), 0);
         for (int j = 0, p = 0; p < n; j = max(1LL, j * 2), lim = p) {
             p = j, iota(all(y), n - j);
@@ -31,7 +30,6 @@ struct suffix_array {
                  s[i + k] == s[j + k]; k++);
     }
 };
-
 
 signed main() {
     ios_base::sync_with_stdio(0);
