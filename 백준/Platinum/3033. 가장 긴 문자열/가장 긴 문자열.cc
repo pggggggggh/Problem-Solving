@@ -10,7 +10,7 @@ struct suffix_array {
     suffix_array(string &s, int lim = 256) {
         int n = s.size() + 1, k = 0, a, b;
         vector<int> x(n), y(n), ws(max(n, lim)), rank(n);
-        for (int i = 0; i < n; i++) x[i] = s[i];
+        for (int i = 0; i < n - 1; i++) x[i] = s[i];
         sa = lcp = y, iota(all(sa), 0);
         for (int j = 0, p = 0; p < n; j = max(1LL, j * 2), lim = p) {
             p = j, iota(all(y), n - j);
