@@ -8,10 +8,10 @@ struct suffix_array {
     vector<int> sa, lcp;
     // both include empty prefix at index 0, lcp[x] = lcp of sa[x], sa[x-1]
 
-    suffix_array(basic_string<int> &s, int lim = 200001) {
+    suffix_array(vector<int> &s, int lim = 200001) {
         int n = s.size() + 1, k = 0, a, b;
         vector<int> x(n), y(n), ws(max(n, lim)), rank(n);
-        for (int i = 0; i < n; i++) x[i] = s[i];
+        for (int i = 0; i < s.size(); i++) x[i] = s[i];
         sa = lcp = y, iota(all(sa), 0);
         for (int j = 0, p = 0; p < n; j = max(1LL, j * 2), lim = p) {
             p = j, iota(all(y), n - j);
@@ -42,8 +42,7 @@ signed main() {
     for (int i = 0; i < n; i++) cin >> a[i];
     reverse(all(a));
     a.insert(a.end(),all(a));
-    basic_string ba(all(a));
-    suffix_array _sa(ba);
+    suffix_array _sa(a);
     auto sa = _sa.sa;
     for (int i = 1; i <= 2 * n; i++) {
         if (sa[i] && sa[i] < n && !--k) {
