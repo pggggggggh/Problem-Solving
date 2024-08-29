@@ -41,8 +41,7 @@ signed main() {
     string res;
     for (int i = 1; i <= c.size(); i++) {
         if (sa.lcp[i] > res.size()) {
-            if (min(sa.sa[i - 1], sa.sa[i]) < a.size()
-                && max(sa.sa[i - 1], sa.sa[i]) > a.size())
+            if (sa.sa[i - 1] < a.size() != sa.sa[i] < a.size())
                 res = c.substr(sa.sa[i], sa.lcp[i]);
         }
     }
