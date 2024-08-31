@@ -91,8 +91,6 @@ double segdist(line a, line b) {
     return ret;
 }
 
-point piv;
-
 vector<int> convex_hull(vector<point> p) {
     if (p.size() == 1) return {0};
     sort(all(p));
