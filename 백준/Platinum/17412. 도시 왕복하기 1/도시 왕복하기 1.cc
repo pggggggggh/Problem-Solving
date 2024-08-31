@@ -4,13 +4,13 @@
 using namespace std;
 using pi = pair<int,int>;
 
-struct Flow {
-    struct Edge {
+struct flow {
+    struct edge {
         int from, to;
         int c, f = 0;
         int left() { return c - f; }
 
-        Edge(int from, int to, int c) {
+        edge(int from, int to, int c) {
             this->from = from;
             this->to = to;
             this->c = c;
@@ -18,11 +18,11 @@ struct Flow {
     };
 
     int n, m, s, t;
-    vector<Edge> E;
+    vector<edge> E;
     vector<vector<int> > g;
     vector<int> level, see;
 
-    Flow(int n) {
+    flow(int n) {
         this->n = n;
         m = 0;
         g.resize(n);
@@ -30,7 +30,7 @@ struct Flow {
         see.resize(n);
     }
 
-    void addEdge(int from, int to, int c) {
+    void add_edge(int from, int to, int c) {
         E.push_back({from, to, c});
         E.push_back({to, from, 0});
         g[from].push_back(m);
@@ -91,12 +91,11 @@ struct Flow {
 signed main() {
     int n, p;
     cin >> n >> p;
-    Flow graph(n);
+    flow graph(n + 1);
     while (p--) {
         int u, v;
         cin >> u >> v;
-        u--, v--;
-        graph.addEdge(u, v, 1);
+        graph.add_edge(u, v, 1);
     }
-    cout << graph.maxflow(0, 1);
+    cout << graph.maxflow(1, 2);
 }
