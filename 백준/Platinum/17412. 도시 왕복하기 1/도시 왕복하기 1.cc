@@ -79,12 +79,12 @@ struct Flow {
         this->s = s;
         this->t = t;
 
-        int ans = 0;
+        int res = 0;
         while (bfs()) {
             fill(all(see), 0);
-            while (int flow = dfs(s, 1e18)) ans += flow;
+            while (int flow = dfs(s, 1e18)) res += flow;
         }
-        return ans;
+        return res;
     }
 };
 
