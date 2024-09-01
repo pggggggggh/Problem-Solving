@@ -5,7 +5,7 @@ using namespace std;
 using pi = pair<int,int>;
 
 struct point {
-    double x, y;
+    int x, y; // double if needed
 
     bool operator<(const point &p) const {
         return tie(x, y) < tie(p.x, p.y);
@@ -27,29 +27,21 @@ struct point {
         return {x - b.x, y - b.y};
     }
 
-    double operator*(const point &b) const { // dot
+    int operator*(const point &b) const { // dot
         return x * b.x + y * b.y;
     }
 
-    double operator/(const point &b) const { // cross
+    int operator/(const point &b) const { // cross
         return x * b.y - y * b.x;
     }
 };
 
 typedef array<point, 2> line;
 
-double hypot(point p) {
-    return sqrt(p.x * p.x + p.y * p.y);
-}
-
-point vec(const line &a) {
-    return a[1] - a[0];
-}
-
 int ccw(point a, point b, point c) {
     point va = {b.x - a.x, b.y - a.y};
     point vb = {c.x - b.x, c.y - b.y};
-    double cross = va / vb;
+    int cross = va / vb;
     if (cross > 0) return 1;
     if (cross < 0) return -1;
     return 0;
@@ -69,26 +61,34 @@ bool cross(line a, line b) {
     return c1 <= 0 && c2 <= 0;
 }
 
-double dist(point a, point b) {
-    return sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+int dist2(point a, point b) {
+    return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
 }
 
-double pointsegdist(point p, line l) {
-    if ((p - l[0]) * vec(l) < 0) return dist(l[0], p);
-    if ((p - l[1]) * vec(l) > 0) return dist(l[1], p);
-    double a = l[1].y - l[0].y;
-    double b = l[0].x - l[1].x;
-    double c = -(l[0].x * a + l[0].y * b);
-
-    return abs((a * p.x + b * p.y + c) / sqrt(a * a + b * b));
+int hypot2(point p) {
+    return p.x * p.x + p.y * p.y;
 }
 
-double segdist(line a, line b) {
+point vec(const line &a) {
+    return a[1] - a[0];
+}
+
+int pointsegdist(point p, line l) { // returns square dist
+    if ((p - l[0]) * vec(l) < 0) return dist2(l[0], p);
+    if ((p - l[1]) * vec(l) > 0) return dist2(l[1], p);
+    int a = l[1].y - l[0].y;
+    int b = l[0].x - l[1].x;
+    int c = -(l[0].x * a + l[0].y * b);
+
+    return (a * p.x + b * p.y + c) * (a * p.x + b * p.y + c) / (a * a + b * b);
+}
+
+int segdist(line a, line b) {
     if (cross(a, b)) return 0;
 
-    double ret = min(pointsegdist(a[0], b), pointsegdist(a[1], b));
-    ret = min(ret, min(pointsegdist(b[0], a), pointsegdist(b[1], a)));
-    return ret;
+    int res = min(pointsegdist(a[0], b), pointsegdist(a[1], b));
+    res = min(res, min(pointsegdist(b[0], a), pointsegdist(b[1], a)));
+    return res;
 }
 
 vector<point> convex_hull(vector<point> p) {
@@ -101,7 +101,7 @@ vector<point> convex_hull(vector<point> p) {
             return a > piv;
         }
         if (ccw(piv, a, b) != 0) return ccw(piv, a, b) > 0;
-        return hypot(a - piv) < hypot(b - piv);
+        return hypot2(a - piv) < hypot2(b - piv);
     });
     vector<point> s;
     s.push_back(p[0]);
@@ -121,19 +121,30 @@ vector<point> convex_hull(vector<point> p) {
     return s;
 }
 
-double rotating_callipers(vector<point> p) {
+pair<int, array<point, 2> > rotating_callipers(vector<point> p) { // return {dist^2, pair of two points}
     auto hull = convex_hull(p);
     int pt = 0;
-    double res = 0;
+    pair<int, array<point, 2> > res = {0, {p[0], p[0]}};
     for (int i = 0; i < hull.size(); i++) {
         while (pt + 1 < hull.size() &&
                ccw({0, 0}, hull[i + 1] - hull[i], hull[pt + 1] - hull[pt]) >= 0) {
-            res = max(res, dist(hull[i], hull[pt]));
+            res = max(res, {dist2(hull[i], hull[pt]), {hull[i], hull[pt]}});
             pt++;
         }
-        res = max(res, dist(hull[i], hull[pt]));
+        res = max(res, {dist2(hull[i], hull[pt]), {hull[i], hull[pt]}});
     }
     return res;
+}
+
+void solve() {
+    int n;
+    cin >> n;
+    vector<point> p(n);
+    for (int i = 0; i < n; i++) {
+        cin >> p[i].x >> p[i].y;
+    }
+    auto [p1,p2] = rotating_callipers(p).second;
+    cout << p1.x << ' ' << p1.y << ' ' << p2.x << ' ' << p2.y << '\n';
 }
 
 int32_t main() {
@@ -145,5 +156,5 @@ int32_t main() {
     for (int i = 0; i < n; i++) {
         cin >> a[i].x >> a[i].y;
     }
-    cout << setprecision(12) << rotating_callipers(a);
+    cout << setprecision(12) << sqrt(rotating_callipers(a).first);
 }
