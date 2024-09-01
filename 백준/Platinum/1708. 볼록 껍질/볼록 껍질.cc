@@ -39,7 +39,7 @@ struct point {
 typedef array<point, 2> line;
 
 double hypot(point p) {
-    return p.x * p.x + p.y * p.y;
+    return sqrt(p.x * p.x + p.y * p.y);
 }
 
 point vec(const line &a) {
@@ -64,7 +64,7 @@ bool cross(line a, line b) {
     if (c1 == 0 && c2 == 0) {
         if (p1 > p2) swap(p1, p2);
         if (p3 > p4) swap(p3, p4);
-        return p3 <= p2 && p1 <= p4; // a c b d, c a d b의 경우를 모두 처리 가능
+        return p3 <= p2 && p1 <= p4; // consider both case : a-c-b-d, c-a-d-b
     }
     return c1 <= 0 && c2 <= 0;
 }
@@ -91,8 +91,8 @@ double segdist(line a, line b) {
     return ret;
 }
 
-vector<int> convex_hull(vector<point> p) {
-    if (p.size() == 1) return {0};
+vector<point> convex_hull(vector<point> p) {
+    if (p.size() == 1) return p;
     sort(all(p));
     point piv = p[0];
     // sort except pivot
@@ -103,29 +103,47 @@ vector<int> convex_hull(vector<point> p) {
         if (ccw(piv, a, b) != 0) return ccw(piv, a, b) > 0;
         return hypot(a - piv) < hypot(b - piv);
     });
-    vector<int> s;
-    s.push_back(0);
-    s.push_back(1);
+    vector<point> s;
+    s.push_back(p[0]);
+    s.push_back(p[1]);
     for (int i = 2; i < p.size(); i++) {
         while (s.size() >= 2) {
-            int p1 = s[s.size() - 2];
-            int p2 = s.back();
+            point p1 = s[s.size() - 2];
+            point p2 = s.back();
             s.pop_back();
-            if (ccw(p[p1], p[p2], p[i]) > 0) {
+            if (ccw(p1, p2, p[i]) > 0) {
                 s.push_back(p2);
                 break;
             }
         }
-        s.push_back(i);
+        s.push_back(p[i]);
     }
     return s;
 }
 
-signed main() {
+double rotating_callipers(vector<point> p) {
+    auto hull = convex_hull(p);
+    int pt = 0;
+    double res = 0;
+    for (int i = 0; i < hull.size(); i++) {
+        while (pt + 1 < hull.size() &&
+               ccw({0, 0}, hull[i + 1] - hull[i], hull[pt + 1] - hull[pt]) >= 0) {
+            res = max(res, dist(hull[i], hull[pt]));
+            pt++;
+        }
+    }
+    return res;
+}
+
+int32_t main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
     int n;
     cin >> n;
-    vector<point> p(n);
-    for (int i = 0; i < n; i++) cin >> p[i].x >> p[i].y;
-    auto hull = convex_hull(p);
-    cout << hull.size();
+    vector<point> a(n);
+    for (int i = 0; i < n; i++) {
+        cin >> a[i].x >> a[i].y;
+    }
+    cout << convex_hull(a).size();
+    // cout << rotating_callipers(a);
 }
