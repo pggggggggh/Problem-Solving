@@ -118,9 +118,20 @@ int32_t main() {
     for (int i = 0; i < n; i++) {
         cin >> p[i].x >> p[i].y >> d[i].x >> d[i].y;
     }
-    int res = -1;
-    for (int i = 0; i <= t; i++) {
-        if (res == -1 || f(i) < f(res)) res = i;
+    int lo = 0, hi = t;
+    while (lo + 100 < hi) {
+        int p = (2 * lo + hi) / 3;
+        int q = (lo + 2 * hi) / 3;
+        if (f(p) <= f(q)) hi = q;
+        else lo = p;
     }
-    cout << res << '\n' << f(res);
+    int res = 0, min_dist = 1e18;
+    for (int i = lo; i <= hi; i++) {
+        int cur = f(i);
+        if (cur < min_dist) {
+            min_dist = cur;
+            res = i;
+        }
+    }
+    cout << res << '\n' << min_dist;
 }
