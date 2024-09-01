@@ -56,12 +56,16 @@ signed main() {
         return par[u][0];
     };
 
+    function<int(int,int)> distance = [&](int u, int v) -> int {
+        return dist[u] + dist[v] - 2 * dist[lca(u, v)];
+    };
+
     int q;
     cin >> q;
     while (q--) {
         int u, v;
         cin >> u >> v;
         u--, v--;
-        cout << dist[u] + dist[v] - dist[lca(u, v)] * 2 << '\n';
+        cout << distance(u, v) << '\n';
     }
 }
