@@ -11,7 +11,7 @@ signed main() {
     int lo = 0, hi = 0;
     for (int i = 0; i < n; i++) {
         cin >> a[i];
-        hi = max(hi, a[i] + 1);
+        hi = max(hi, a[i]);
     }
     function<int(int)> able = [&](int x) {
         int res = 0;
