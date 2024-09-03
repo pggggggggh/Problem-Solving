@@ -34,15 +34,15 @@ struct segtree {
         }
     }
 
-    // void update(int x, const S &val) {
-    //     x += sz;
-    //     seg[x] = op(seg[x], val);
-    //
-    //     while (x > 1) {
-    //         x /= 2;
-    //         seg[x] = op(seg[x * 2], seg[x * 2 + 1]);
-    //     }
-    // }
+    void add(int x, const S &val) {
+        x += sz;
+        seg[x] = op(seg[x], val);
+
+        while (x > 1) {
+            x /= 2;
+            seg[x] = op(seg[x * 2], seg[x * 2 + 1]);
+        }
+    }
 
     S query(int l, int r) {
         S res = e;
@@ -53,6 +53,18 @@ struct segtree {
         }
         return res;
     }
+
+    // /* only applicable in int/sum segtree */
+    // int kth_element(S k) {
+    //     int node = 1;
+    //     while (node < sz) {
+    //         if (seg[node * 2] < k) {
+    //             k -= seg[node * 2];
+    //             node = node * 2 + 1;
+    //         } else node = node * 2;
+    //     }
+    //     return node - sz;
+    // }
 };
 
 struct heavy_light_decomposition {
@@ -105,15 +117,15 @@ struct heavy_light_decomposition {
     }
 
     int query(int a, int b) {
-        int res = 0;
+        int res = seg.e;
         while (top[a] != top[b]) {
             if (depth[top[a]] < depth[top[b]]) swap(a, b);
             int st = top[a];
-            res = max(res, seg.query(pos[st], pos[a]));
+            res = seg.op(res, seg.query(pos[st], pos[a]));
             a = par[st];
         }
         if (depth[a] > depth[b]) swap(a, b);
-        res = max(res, seg.query(pos[a] + 1, pos[b]));
+        res = seg.op(res, seg.query(pos[a] + 1, pos[b]));
         return res;
     }
 };
@@ -147,13 +159,9 @@ signed main() {
             auto [u,v,w] = edges[x];
             if (hld.depth[u] > hld.depth[v]) hld.update(u, y);
             else hld.update(v, y);
-            // for (int i = 0; i < n; i++) {
-            //     cout << i << ':' << hld.seg.query(i, i) << '\n';
-            // }
         } else {
             x--, y--;
-            if (x == y) cout << 0 << '\n';
-            else cout << hld.query(x, y) << '\n';
+            cout << hld.query(x, y) << '\n';
         }
     }
 }
