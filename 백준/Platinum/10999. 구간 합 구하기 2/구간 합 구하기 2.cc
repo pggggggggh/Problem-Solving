@@ -66,7 +66,7 @@ struct lazyseg {
         put(x, val, 1, 0, sz - 1);
     }
 
-    void update(int x, int y, S val, int node, int l, int r) {
+    void add(int x, int y, S val, int node, int l, int r) {
         propa(node, l, r);
         if (r < x || y < l) return;
         if (x <= l && r <= y) {
@@ -75,13 +75,13 @@ struct lazyseg {
             return;
         }
         int mid = l + r >> 1;
-        update(x, y, val, node * 2, l, mid);
-        update(x, y, val, node * 2 + 1, mid + 1, r);
+        add(x, y, val, node * 2, l, mid);
+        add(x, y, val, node * 2 + 1, mid + 1, r);
         seg[node] = seg_op(seg[node * 2], seg[node * 2 + 1]);
     }
 
-    void update(int x, int y, S val) {
-        update(x, y, val, 1, 0, sz - 1);
+    void add(int x, int y, S val) {
+        add(x, y, val, 1, 0, sz - 1);
     }
 
     S query(int x, int y, int node, int l, int r) {
@@ -113,7 +113,7 @@ signed main() {
         cin >> w >> x >> y;
         if (w == 1) {
             cin >> z;
-            seg.update(x, y, z);
+            seg.add(x, y, z);
         } else cout << seg.query(x, y) << '\n';
     }
 }
