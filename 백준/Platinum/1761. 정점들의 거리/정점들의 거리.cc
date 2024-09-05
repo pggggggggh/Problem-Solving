@@ -18,47 +18,48 @@ signed main() {
         adj[x].push_back({y, z});
         adj[y].push_back({x, z});
     }
-    const int MAX_LOG = 30;
-    vector<int> vis(n);
-    vector<int> depth(n);
-    vector<int> dist(n);
-    vector par(n, vector<int>(MAX_LOG)); // (2^j)th ancestor from i
+    // given vector<vector<pi> > adj(n) of {u,dist}
+const int MAX_LOG = 30;
+vector<int> vis(n);
+vector<int> depth(n);
+vector<int> dist(n);
+vector par(n, vector<int>(MAX_LOG)); // (2^j)th ancestor from i
 
-    function<void(int)> dfs = [&](int u) -> void {
-        vis[u] = 1;
-        for (auto &[v,d]: adj[u]) {
-            if (vis[v]) continue;
-            par[v][0] = u;
-            depth[v] = depth[u] + 1;
-            dist[v] = dist[u] + d;
-            dfs(v);
-        }
-    };
-    dfs(0);
-    for (int j = 1; j < MAX_LOG; j++) {
-        for (int i = 0; i < n; i++) {
-            par[i][j] = par[par[i][j - 1]][j - 1];
+function<void(int)> dfs = [&](int v) -> void {
+    vis[v] = 1;
+    for (auto &[u,d]: adj[v]) {
+        if (vis[u]) continue;
+        par[u][0] = v;
+        depth[u] = depth[v] + 1;
+        dist[u] = dist[v] + d;
+        dfs(u);
+    }
+};
+dfs(0);
+for (int j = 1; j < MAX_LOG; j++) {
+    for (int i = 0; i < n; i++) {
+        par[i][j] = par[par[i][j - 1]][j - 1];
+    }
+}
+
+function<int(int,int)> lca = [&](int v, int u) -> int {
+    if (depth[v] < depth[u]) swap(v, u);
+    int diff = depth[v] - depth[u];
+    for (int i = MAX_LOG - 1; i >= 0; i--) {
+        if (diff & (1 << i)) v = par[v][i];
+    }
+    if (v == u) return v;
+    for (int i = MAX_LOG - 1; i >= 0; i--) {
+        if (par[v][i] != par[u][i]) {
+            v = par[v][i], u = par[u][i];
         }
     }
+    return par[v][0];
+};
 
-    function<int(int,int)> lca = [&](int u, int v) -> int {
-        if (depth[u] < depth[v]) swap(u, v);
-        int diff = depth[u] - depth[v];
-        for (int i = MAX_LOG - 1; i >= 0; i--) {
-            if (diff & (1 << i)) u = par[u][i];
-        }
-        if (u == v) return u;
-        for (int i = MAX_LOG - 1; i >= 0; i--) {
-            if (par[u][i] != par[v][i]) {
-                u = par[u][i], v = par[v][i];
-            }
-        }
-        return par[u][0];
-    };
-
-    function<int(int,int)> distance = [&](int u, int v) -> int {
-        return dist[u] + dist[v] - 2 * dist[lca(u, v)];
-    };
+function<int(int,int)> distance = [&](int v, int u) -> int {
+    return dist[v] + dist[u] - 2 * dist[lca(v, u)];
+};
 
     int q;
     cin >> q;
