@@ -37,16 +37,11 @@ int recur(int i1, int i2) {
     if (res != -1e18) return res;
 
     point p1 = sorted[i1], p2 = sorted[i2];
-    if (ccw(p1, p2, p0) > 0) {
-        // 끝낼 수 있음
-        res = 0;
-    } else {
-        res = -1e9;
-    }
+    if (ccw(p1, p2, p0) > 0) res = 0;
+    else res = -1e9;
     for (int i = i2 + 1; i < sorted.size(); i++) {
         if (ccw(p1, p2, sorted[i]) > 0) res = max(res, recur(i2, i) + 1);
     }
-    // cout << i1 << ' ' << i2 << ':' << res << '\n';
     return res;
 }
 
@@ -68,7 +63,6 @@ signed main() {
             if (a < p0 ^ b < p0) return a < p0;
             return ccw(p0, a, b) > 0;
         });
-        // for (int j = 0; j < sorted.size(); j++) cout << sorted[j].x << ' ' << sorted[j].y << '\n';
         for (int j = 0; j < n; j++) for (int k = 0; k < n; k++) dp[j][k] = -1e18;
         int res = 0;
         for (int j = 1; j < sorted.size(); j++) {
