@@ -30,14 +30,13 @@ int dnc(int l, int r) {
     sort(all(band), [&](const pi &x, const pi &y) {
         return x.second < y.second;
     });
-    int res = d;
     for (int i = 0; i < band.size(); i++) {
         for (int j = i + 1; j < band.size(); j++) {
             if ((band[j].second - band[i].second) * (band[j].second - band[i].second) > d) break;
-            res = min(res, dist(band[i], band[j]));
+            d = min(d, dist(band[i], band[j]));
         }
     }
-    return res;
+    return d;
 }
 
 signed main() {
