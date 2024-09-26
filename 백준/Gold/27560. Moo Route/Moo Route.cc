@@ -9,31 +9,19 @@ void solve() {
 	cin >> n;
 	vector<int> a(n + 1);  // a[n] = 0
 	for (int i = 0; i < n; i++) cin >> a[i];
-	int cur = -1, dir = 1;
+	int cur = 0;
 	while (1) {
-		// 현재 cur에 화살표 그어놓은 상태
-		if (dir == 1) {
-			if (a[cur + 1] == 0)
-				dir *= -1;
-			else
-				cur++;
-		} else {
-			if (cur == 0) {
-				if (a[cur] == 0)
-					break;
-				else
-					dir *= -1;
-			} else if (a[cur - 1] == 1) {
-				if (a[cur] > 0)
-					dir *= -1;
-				else
-					cur--;
-			} else {
-				cur--;
-			}
+		while (a[cur] > 0) {
+			cout << 'R';
+			a[cur]--;
+			cur++;
 		}
-		a[cur] -= 1;
-		cout << (dir == 1 ? 'R' : 'L');
+		while (cur > 0 && (a[cur - 1] > 1 || a[cur] == 0)) {
+			cout << 'L';
+			cur--;
+			a[cur]--;
+		}
+		if (cur == 0 && a[cur] == 0) break;
 	}
 }
 
