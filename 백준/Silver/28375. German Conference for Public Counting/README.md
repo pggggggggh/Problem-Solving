@@ -4,7 +4,7 @@
 
 ### 성능 요약
 
-메모리: 31120 KB, 시간: 32 ms
+메모리: 2020 KB, 시간: 0 ms
 
 ### 분류
 
@@ -12,7 +12,7 @@
 
 ### 제출 일자
 
-2024년 10월 9일 15:17:59
+2024년 10월 10일 16:33:11
 
 ### 문제 설명
 
@@ -20,7 +20,7 @@
 
 <p>At this event, Greta meets counting enthusiasts from all over the country for one week of counting and counting and counting... Together they participate in the Glamorous Competitive Public Counting and the Great Chaotic Public Counting. At the end of the week they all try to win the Golden Cup of Public Counting. Her favourite is the Gently Calming Public Counting where the crowd counts in silence, trying to harmoniously synchronise to reach the target number at precisely the same moment.</p>
 
-<p style="text-align: center;"><img alt="" src="" style="width: 599px; height: 150px;"></p>
+<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/fcc4bc58-212a-4702-a734-e468f8b22d9c/-/preview/" style="width: 599px; height: 150px;"></p>
 
 <p style="text-align: center;">Figure G.1: People holding up signs for the countdown.</p>
 
