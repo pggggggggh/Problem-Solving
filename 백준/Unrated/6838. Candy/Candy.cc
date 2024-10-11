@@ -4,7 +4,7 @@
 using namespace std;
 using pi = pair<int, int>;
 
-const int MX = 1000;
+const int MX = 200;
 
 void solve() {
 	int n;
