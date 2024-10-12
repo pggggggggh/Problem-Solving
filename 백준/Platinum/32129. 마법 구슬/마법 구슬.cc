@@ -30,8 +30,8 @@ void solve()
 			cur += y;
 			while (y--) {
 				int idx = 1;
-				while (idx < n && naive[idx] > naive[idx + 1]) idx++;
-				naive[idx]++;
+				// while (idx < n && naive[idx] > naive[idx + 1]) idx++;
+				// naive[idx]++;
 			}
 		} else {
 			int idx = prev(upper_bound(all(needed), cur)) - needed.begin();
