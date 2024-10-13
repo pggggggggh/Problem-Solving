@@ -11,68 +11,28 @@ void solve()
 	cin >> x >> ar[0] >> ar[1] >> ar[2] >> ar[3];
 	int tot = ar[0] + ar[1] + ar[2] + ar[3];
 
-	vector<array<int, 4>> ans;
-	for (int d = 0; d < 4; d++) {
-		array<int, 4> cur = ar;
-		vector<array<int, 4>> res;
-		res.push_back(cur);
-
-		// 짝수로
-		if ((tot - cur[d]) % 2 == 1) {
-			int a = -1;
-			for (int i = 0; i < 4; i++)
-				if (i != d && (a == -1 || cur[i] > cur[a])) a = i;
-			int b = -1, c;
-			for (int i = 0; i < 4; i++) {
-				if (i != d && i != a) {
-					if (b == -1) b = i;
-					else c = i;
-				}
-			}
-			cur[d]--, cur[a]--, cur[c] += 2;
-			res.push_back(cur);
-		}
-
-		// a <= b+c 만들기
-		int a = -1;
-		for (int i = 0; i < 4; i++)
-			if (i != d && (a == -1 || cur[i] > cur[a])) a = i;
-		int b = -1, c;
-		for (int i = 0; i < 4; i++) {
-			if (i != d && i != a) {
-				if (b == -1) b = i;
-				else c = i;
-			}
-		}
-		while (cur[a] > cur[b] + cur[c]) {
-			if (cur[b]) cur[a]--, cur[b]--, cur[c] += 2;
-			else if (cur[c]) cur[a]--, cur[c]--, cur[b] += 2;
-			else {
-				if (cur[d] == 0) goto fin;
-				else {
-					cur[d] -= 1, cur[a] -= 1, cur[b] += 2;
-					res.push_back(cur);
-					cur[d] -= 1, cur[a] -= 1, cur[c] += 2;
-				}
-			}
-			res.push_back(cur);
-		}
-		while (cur[a]) {
-			if (cur[b] > cur[c]) cur[a]--, cur[b]--, cur[d] += 2;
-			else cur[a]--, cur[c]--, cur[d] += 2;
-			res.push_back(cur);
-		}
-		while (cur[b]) {
-			cur[b]--, cur[c]--, cur[d] += 2;
-			res.push_back(cur);
-		}
-
-	fin:
-		if (ans.empty() || res.size() < ans.size()) ans = res;
-	}
-	for (auto& a : ans) {
-		for (int i = 0; i < 4; i++) cout << a[i] << ' ';
+	while (1) {
+		for (int i = 0; i < 4; i++) cout << ar[i] << ' ';
 		cout << '\n';
+
+		array<int, 4> idx = { 0, 1, 2, 3 };
+		sort(all(idx), [&](int x, int y) {
+			return ar[x] < ar[y];
+		});
+		if (ar[idx[2]] == 0) break;
+		if ((tot - ar[idx[3]]) % 2) { // 짝수로 만들기
+			ar[idx[2]]--, ar[idx[3]]--, ar[idx[0]] += 2;
+			continue;
+		}
+		if (ar[idx[1]] == 0) {
+			ar[idx[2]]--, ar[idx[3]]--, ar[idx[0]] += 2;
+			continue;
+		}
+		if (ar[idx[0]] + ar[idx[1]] < ar[idx[2]]) { // a+b < c
+			ar[idx[1]]--, ar[idx[2]]--, ar[idx[0]] += 2;
+			continue;
+		}
+		ar[idx[1]]--, ar[idx[2]]--, ar[idx[3]] += 2;
 	}
 }
 
