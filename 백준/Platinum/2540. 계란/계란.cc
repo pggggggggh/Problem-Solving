@@ -29,7 +29,6 @@ void solve()
 					else c = i;
 				}
 			}
-			if (cur[b] < cur[c]) swap(b, c);
 			cur[d]--, cur[a]--, cur[c] += 2;
 			res.push_back(cur);
 		}
@@ -70,12 +69,6 @@ void solve()
 
 	fin:
 		if (ans.empty() || res.size() < ans.size()) ans = res;
-		// cout << a << ' ' << b << ' ' << c << ' ' << d << ":\n";
-		// for (auto& r : res) {
-		// 	for (int i = 0; i < 4; i++) cout << r[i] << ' ';
-		// 	cout << '\n';
-		// }
-		// cout << "------\n";
 	}
 	for (auto& a : ans) {
 		for (int i = 0; i < 4; i++) cout << a[i] << ' ';
