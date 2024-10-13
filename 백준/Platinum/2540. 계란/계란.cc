@@ -53,7 +53,7 @@ void solve()
 				else {
 					cur[d] -= 1, cur[a] -= 1, cur[b] += 2;
 					res.push_back(cur);
-					cur[d] -= 1, cur[a] -= 1, cur[b] += 2;
+					cur[d] -= 1, cur[a] -= 1, cur[c] += 2;
 				}
 			}
 			res.push_back(cur);
