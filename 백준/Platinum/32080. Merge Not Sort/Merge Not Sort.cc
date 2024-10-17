@@ -31,8 +31,8 @@ void solve()
 	for (int i = 1; i < m; i++) {
 		for (int j = 0; j <= n / 2; j++) {
 			dp[i][j] = dp[i - 1][j];
-			if (j - (int)block[i].size() >= 0)
-				dp[i][j] = max(dp[i][j], dp[i - 1][j - (int)block[i].size()]);
+			if (j >= block[i].size())
+				dp[i][j] = max(dp[i][j], dp[i - 1][j - block[i].size()]);
 		}
 	}
 	if (dp[m - 1][n / 2] == 0) {
@@ -42,9 +42,9 @@ void solve()
 	int cur_sz = n / 2;
 	vector<int> ar, br;
 	for (int i = m - 1; i >= 1; i--) {
-		if (cur_sz - (int)block[i].size() >= 0 && dp[i - 1][cur_sz - (int)block[i].size()]) {
+		if (cur_sz >= block[i].size() && dp[i - 1][cur_sz - block[i].size()]) {
 			ar.push_back(i);
-			cur_sz -= (int)block[i].size();
+			cur_sz -= block[i].size();
 		} else br.push_back(i);
 	}
 	if (cur_sz > 0) ar.push_back(0);
