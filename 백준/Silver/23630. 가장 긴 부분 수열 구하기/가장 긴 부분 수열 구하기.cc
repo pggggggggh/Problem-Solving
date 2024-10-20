@@ -1,0 +1,31 @@
+#include <bits/stdc++.h>
+#define all(v) (v).begin(), (v).end()
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+void solve()
+{
+	int n;
+	cin >> n;
+	vector<int> a(n);
+	for (int i = 0; i < n; i++) cin >> a[i];
+	int res = 0;
+	for (int i = 25; i >= 0; i--) {
+		int cur = 0;
+		for (int j = 0; j < n; j++) {
+			if ((a[j] >> i) & 1) cur++;
+		}
+		res = max(res, cur);
+	}
+	cout << res;
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	solve();
+}
