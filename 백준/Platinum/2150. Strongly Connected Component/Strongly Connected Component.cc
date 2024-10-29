@@ -2,75 +2,63 @@
 #define all(v) (v).begin(), (v).end()
 #define int long long
 using namespace std;
+using pi = pair<int, int>;
 
-int n, k;
+vector<int> adj[10005];
+vector<int> id(10005), finished(10005);
+int dfn;
+vector<vector<int>> sccs;
+vector<int> stk;
 
-struct strongly_connected {
-    int n;
-    vector<vector<int> > adj;
+int go(int u)
+{
+	id[u] = ++dfn;
+	stk.push_back(u);
+	int top = id[u];
+	for (auto& v : adj[u]) {
+		if (id[v] == 0) top = min(top, go(v));
+		else if (!finished[v]) top = min(top, id[v]);
+	}
+	if (top == id[u]) {
+		vector<int> scc;
+		while (stk.back() != u) {
+			scc.push_back(stk.back());
+			finished[stk.back()] = 1;
+			stk.pop_back();
+		}
+		scc.push_back(stk.back());
+		finished[stk.back()] = 1;
+		stk.pop_back();
+		sort(all(scc));
+		sccs.push_back(scc);
+	}
+	return top;
+}
 
-    strongly_connected(int n) {
-        this->n = n;
-        adj.resize(n);
-    }
+void solve()
+{
+	int n, m;
+	cin >> n >> m;
+	for (int i = 0; i < m; i++) {
+		int x, y;
+		cin >> x >> y;
+		adj[x].push_back(y);
+	}
+	for (int i = 1; i <= n; i++)
+		if (!id[i]) go(i);
+	sort(all(sccs));
+	cout << sccs.size() << '\n';
+	for (auto& scc : sccs) {
+		for (auto& x : scc) cout << x << ' ';
+		cout << "-1\n";
+	}
+}
 
-    void add_edge(int from,int to) {
-        adj[from].push_back(to);
-    }
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
 
-    vector<vector<int> > get_scc() {
-        vector<int> dfn(n, -1);
-        vector<int> sn(n, -1);
-        vector<vector<int> > scc;
-        int cnt = 0, scnt = 0;
-        stack<int> stk;
-        function<int(int)> dfs = [&](int v) {
-            dfn[v] = ++cnt;
-            stk.push(v);
-            int res = dfn[v];
-            for (auto &u: adj[v]) {
-                if (dfn[u] == -1) res = min(res, dfs(u)); // not visited
-                else if (sn[u] == -1) res = min(res, dfn[u]); // visited, but not finished
-            }
-            if (res == dfn[v]) {
-                vector<int> c;
-                while (1) {
-                    int t = stk.top();
-                    stk.pop();
-                    sn[t] = scnt;
-                    c.push_back(t);
-                    if (t == v) break;
-                }
-                sort(all(c));
-                scc.push_back(c);
-                scnt++;
-            }
-            return res;
-        };
-        for (int i = 0; i < n; i++) {
-            if (dfn[i] == -1) dfs(i);
-        }
-        return scc;
-    }
-};
-
-signed main() {
-    int n, k;
-    cin >> n >> k;
-    strongly_connected g(n);
-    for (int i = 0; i < k; i++) {
-        int x, y;
-        cin >> x >> y;
-        x--;
-        y--;
-        g.add_edge(x, y);
-    }
-    vector<vector<int> > scc = g.get_scc();
-    sort(all(scc));
-    cout << scc.size() << '\n';
-    for (auto &c: scc) {
-        sort(all(c));
-        for (auto &x: c) cout << x + 1 << " ";
-        cout << "-1 \n";
-    }
+	solve();
 }
