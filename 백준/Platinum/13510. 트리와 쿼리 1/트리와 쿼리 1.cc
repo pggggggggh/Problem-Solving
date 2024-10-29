@@ -1,167 +1,152 @@
 #include <bits/stdc++.h>
-using namespace std;
+#define all(v) (v).begin(), (v).end()
 #define int long long
-#define all(x) (x).begin(),(x).end()
+using namespace std;
+using pi = pair<int, int>;
 
 struct segtree {
-    using S = int;
+	int sz;
+	vector<int> seg;
 
-    static constexpr S e = 0;
+	segtree(int n)
+	{
+		sz = 1;
+		while (sz < n) sz *= 2;
+		seg.resize(2 * sz, 0);
+	}
 
-    static S op(S a, S b) {
-        return max(a, b);
-    }
+	void update(int x, int val)
+	{
+		x += sz;
+		seg[x] = val;
+		x /= 2;
+		while (x) {
+			seg[x] = max(seg[x * 2], seg[x * 2 + 1]);
+			x /= 2;
+		}
+	}
 
-    int n, sz;
-    vector<S> seg;
-
-    segtree(int n, const vector<S> &v = vector<S>()) {
-        assert(n >= v.size());
-        this->n = n;
-        sz = 1;
-        while (sz < n) sz *= 2;
-        seg = vector(2 * sz, e);
-        for (int i = 0; i < v.size(); i++) seg[i + sz] = v[i];
-        for (int i = sz - 1; i >= 1; i--) seg[i] = op(seg[i * 2], seg[i * 2 + 1]);
-    }
-
-    void put(int x, const S &val) {
-        x += sz;
-        seg[x] = val;
-        while (x > 1) {
-            x /= 2;
-            seg[x] = op(seg[x * 2], seg[x * 2 + 1]);
-        }
-    }
-
-    void add(int x, const S &val) {
-        x += sz;
-        seg[x] = op(seg[x], val);
-
-        while (x > 1) {
-            x /= 2;
-            seg[x] = op(seg[x * 2], seg[x * 2 + 1]);
-        }
-    }
-
-    S query(int l, int r) {
-        S res = e;
-        l += sz, r += sz;
-        for (; l <= r; l >>= 1, r >>= 1) {
-            if (l & 1) res = op(res, seg[l++]);
-            if (!(r & 1)) res = op(res, seg[r--]);
-        }
-        return res;
-    }
-
-    // /* only applicable in int/sum segtree */
-    // int kth_element(S k) {
-    //     int node = 1;
-    //     while (node < sz) {
-    //         if (seg[node * 2] < k) {
-    //             k -= seg[node * 2];
-    //             node = node * 2 + 1;
-    //         } else node = node * 2;
-    //     }
-    //     return node - sz;
-    // }
+	int query(int l, int r)
+	{
+		l += sz, r += sz;
+		int ret = 0;
+		while (l <= r) {
+			if (l & 1) ret = max(ret, seg[l++]);
+			if (~r & 1) ret = max(ret, seg[r--]);
+			l >>= 1, r >>= 1;
+		}
+		return ret;
+	}
 };
 
-struct heavy_light_decomposition {
-    int n;
-    vector<vector<int> > adj, g; // adj : bidirectional, g : only tree edges
-    vector<int> par, depth, sz, top, pos, vis;
-    int dfn = 0;
-    segtree seg;
+struct HLD {
+	vector<vector<int>> adj;
+	vector<vector<int>> g;
+	vector<int> sz, dep, par, top, in;
+	segtree seg;
 
-    heavy_light_decomposition(const vector<vector<int> > &_adj, int root = 0)
-        : n(_adj.size()), adj(_adj), g(n),
-          par(n), depth(n), sz(n), top(n), pos(n), vis(n), seg(n) {
-        top[root] = root;
-        par[root] = -1;
-        dfs_tree(root);
-        dfs_size(root);
-        dfs_hld(root);
-    }
+	HLD(int n)
+	    : adj(n + 1)
+	    , g(n + 1)
+	    , sz(n + 1)
+	    , dep(n + 1)
+	    , par(n + 1)
+	    , top(n + 1)
+	    , in(n + 1)
+	    , seg(n + 1)
+	{
+	}
 
-    void dfs_tree(int v) {
-        vis[v] = 1;
-        for (auto &u: adj[v]) {
-            if (vis[u]) continue;
-            g[v].push_back(u);
-            dfs_tree(u);
-        }
-    }
+	void add_edge(int u, int v)
+	{
+		adj[u].push_back(v);
+		adj[v].push_back(u);
+	}
 
-    void dfs_size(int v) {
-        sz[v] = 1;
-        for (auto &u: g[v]) {
-            depth[u] = depth[v] + 1;
-            par[u] = v;
-            dfs_size(u);
-            sz[v] += sz[u];
-            if (sz[u] > sz[g[v][0]]) swap(u, g[v][0]);
-        }
-    }
+	void update_edge(int u, int v, int w)
+	{
+		if (dep[u] < dep[v]) swap(u, v);
+		seg.update(in[u], w);
+	}
 
-    void dfs_hld(int v) {
-        pos[v] = dfn++; // 0~
-        for (auto &u: g[v]) {
-            top[u] = u == g[v][0] ? top[v] : u;
-            dfs_hld(u);
-        }
-    }
+	void dfs_tree(int u, int p)
+	{
+		for (auto& v : adj[u]) {
+			if (v == p) continue;
+			g[u].push_back(v);
+			par[v] = u;
+			dfs_tree(v, u);
+		}
+	}
 
-    void update(int v, int w) { // vertex
-        seg.put(pos[v], w);
-    }
+	void dfs_heavy(int u)
+	{
+		sz[u] = 1;
+		for (auto& v : g[u]) {
+			dep[v] = dep[u] + 1;
+			dfs_heavy(v);
+			sz[u] += sz[v];
+			if (sz[v] > sz[g[u][0]]) swap(v, g[u][0]);
+		}
+	}
 
-    int query(int a, int b) {
-        int res = seg.e;
-        while (top[a] != top[b]) {
-            if (depth[top[a]] < depth[top[b]]) swap(a, b);
-            int st = top[a];
-            res = seg.op(res, seg.query(pos[st], pos[a]));
-            a = par[st];
-        }
-        if (depth[a] > depth[b]) swap(a, b);
-        res = seg.op(res, seg.query(pos[a] + 1, pos[b]));
-        return res;
-    }
+	int dfn = 0;
+	void dfs_hld(int u)
+	{
+		in[u] = ++dfn;
+		for (auto& v : g[u]) {
+			if (v == g[u][0]) top[v] = top[u];
+			else top[v] = v;
+			dfs_hld(v);
+		}
+	}
+
+	int query(int u, int v)
+	{
+		int ret = 0;
+		while (top[u] != top[v]) {
+			if (dep[top[u]] < dep[top[v]]) swap(u, v);
+			int t = top[u];
+			ret = max(ret, seg.query(in[t], in[u]));
+			u = par[t];
+		}
+		if (dep[u] > dep[v]) swap(u, v);
+		ret = max(ret, seg.query(in[u] + 1, in[v]));
+		return ret;
+	}
 };
 
-signed main() {
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
-    int n, q;
-    cin >> n;
-    vector<vector<int> > adj(n);
-    vector<array<int, 3> > edges;
-    for (int i = 0; i < n - 1; i++) {
-        int u, v, w;
-        cin >> u >> v >> w;
-        u--, v--;
-        adj[u].push_back(v);
-        adj[v].push_back(u);
-        edges.push_back({u, v, w});
-    }
-    heavy_light_decomposition hld(adj);
-    for (auto &[u,v,w]: edges) {
-        if (hld.depth[u] > hld.depth[v]) hld.update(u, w);
-        else hld.update(v, w);
-    }
-    cin >> q;
-    while (q--) {
-        int w, x, y;
-        cin >> w >> x >> y;
-        if (w == 1) {
-            x--;
-            auto [u,v,w] = edges[x];
-            if (hld.depth[u] > hld.depth[v]) hld.update(u, y);
-            else hld.update(v, y);
-        } else {
-            x--, y--;
-            cout << hld.query(x, y) << '\n';
-        }
-    }
+void solve()
+{
+	int n;
+	vector<array<int, 3>> edges;
+	cin >> n;
+	HLD hld(n);
+	for (int i = 0; i < n - 1; i++) {
+		int s, e, x;
+		cin >> s >> e >> x;
+		hld.add_edge(s, e);
+		edges.push_back({ s, e, x });
+	}
+	hld.dfs_tree(1, -1);
+	hld.dfs_heavy(1);
+	hld.dfs_hld(1);
+	for (int i = 0; i < n - 1; i++) hld.update_edge(edges[i][0], edges[i][1], edges[i][2]);
+	int q;
+	cin >> q;
+	while (q--) {
+		int x, y, z;
+		cin >> x >> y >> z;
+		if (x == 1) hld.update_edge(edges[y - 1][0], edges[y - 1][1], z);
+		else cout << hld.query(y, z) << '\n';
+	}
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	solve();
 }
