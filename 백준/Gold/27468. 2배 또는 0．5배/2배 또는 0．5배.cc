@@ -11,11 +11,11 @@ void solve()
 	vector<int> vis(n + 1);
 	vis[0] = 1;
 	int cur = 1;
-	if (n % 2 == 0) cur = 2;
+	if (n % 2 == 0 || n % 4 == 3) cur = 2;
 	vis[cur] = 1;
 	cout << "YES\n";
 	cout << cur << ' ';
-	while (cur <= n || !vis[n - 1]) {
+	while (cur < n || !vis[n - 1]) {
 		if (!vis[cur - 1]) {
 			cur--;
 			vis[cur] = 1;
