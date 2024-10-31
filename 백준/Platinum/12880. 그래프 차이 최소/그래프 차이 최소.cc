@@ -1,103 +1,87 @@
 #include <bits/stdc++.h>
-#define all(v) (v).begin(), (v).end()
-#define int long long
+#define all(v) v.begin(), v.end()
+#define prs(v)    \
+	sort(all(v)); \
+	v.erase(unique(all(v)), v.end())
 using namespace std;
-using pi = pair<int, int>;
-
-int a[105][105];
-
-struct strongly_connected {
-	int n;
-	vector<vector<int>> adj;
-
-	strongly_connected(int n)
-	    : n(n)
+using ll = long long;
+using P = pair<ll, ll>;
+struct SCC {
+	int n, cnt, scc_id;
+	vector<vector<int>> G, scc;
+	vector<int> id, fin, S;
+	SCC(int n_, vector<vector<int>> G_)
+	    : id(n_ + 1), fin(n_ + 1), cnt(0), scc_id(0)
 	{
-		adj.resize(n + 1);
-		id.resize(n + 1);
-		finished.resize(n + 1);
+		n = n_;
+		G = G_;
 	}
-
-	void add_edge(int s, int e)
+	int dfs(int v)
 	{
-		adj[s].push_back(e);
-	}
-
-	int dfn = 0;
-	vector<int> id, finished;
-	vector<int> stk;
-	vector<vector<int>> sccs;
-
-	int go(int u)
-	{
-		id[u] = ++dfn;
-		stk.push_back(u);
-		int top = id[u];
-		for (auto& v : adj[u]) {
-			if (id[v] == 0) top = min(top, go(v));
-			else if (!finished[v]) top = min(top, id[v]);
+		int top = id[v] = ++cnt;
+		S.push_back(v);
+		for (int nx : G[v]) {
+			if (!id[nx]) top = min(top, dfs(nx));
+			else if (!fin[nx]) top = min(top, id[nx]);
 		}
-		if (top == id[u]) {
-			vector<int> scc;
-			while (stk.back() != u) {
-				finished[stk.back()] = 1;
-				scc.push_back(stk.back());
-				stk.pop_back();
+		if (top == id[v]) {
+			vector<int> tmp;
+			while (S.size()) {
+				int u = S.back();
+				S.pop_back();
+				fin[u] = 1;
+				tmp.push_back(u);
+				if (u == v) break;
 			}
-			finished[stk.back()] = 1;
-			scc.push_back(stk.back());
-			stk.pop_back();
-			sccs.push_back(scc);
+			scc.push_back(tmp);
+			scc_id++;
 		}
-
 		return top;
 	}
-
-	int get_scc()
+	void go()
 	{
-		for (int i = 1; i <= n; i++) {
-			if (!id[i]) go(i);
-		}
-		return sccs.size();
+		for (int s = 1; s <= n; s++)
+			if (!id[s]) dfs(s);
 	}
 };
-
-void solve()
+int main()
 {
+	cin.tie(0)->sync_with_stdio(0);
 	int n;
 	cin >> n;
-	set<int> st;
-	for (int i = 1; i <= n; i++) {
-		for (int j = 1; j <= n; j++) {
-			cin >> a[i][j];
-			st.insert(a[i][j]);
+	if (n == 1) {
+		cout << 0;
+		return 0;
+	}
+	vector<array<ll, 3>> edge;
+	for (int s = 1; s <= n; s++) {
+		for (int e = 1; e <= n; e++) {
+			int k;
+			cin >> k;
+			if (s ^ e) edge.push_back({ k, s, e });
 		}
 	}
-	int res = 1e18;
-	for (auto& s : st) {
-		int lo = -1, hi = 1e9;
-		while (lo + 1 < hi) {
-			int mid = lo + hi >> 1;
-			strongly_connected scc(n);
-			for (int i = 1; i <= n; i++) {
-				for (int j = 1; j <= n; j++) {
-					if (a[i][j] >= s && a[i][j] <= s + mid) scc.add_edge(i, j);
-				}
+	int sz = edge.size();
+	sort(all(edge));
+	auto jud = [&](int len) {
+		for (int s = 0, e = 0; s < sz; s++) {
+			while (e < sz && edge[s][0] + len >= edge[e][0]) e++;
+			vector<vector<int>> G(n + 1);
+			for (int x = s; x < e; x++) {
+				auto [w, u, v] = edge[x];
+				G[u].push_back(v);
 			}
-			if (scc.get_scc() == 1) {
-				hi = mid;
-			} else lo = mid;
+			SCC scc(n, G);
+			scc.go();
+			if (scc.scc_id == 1) return 1;
 		}
-		res = min(res, hi);
+		return 0;
+	};
+	int l = -1, r = 202020;
+	while (l + 1 < r) {
+		int m = (l + r) >> 1;
+		if (jud(m)) r = m;
+		else l = m;
 	}
-	cout << res << '\n';
-}
-
-signed main()
-{
-	ios_base::sync_with_stdio(0);
-	cin.tie(0);
-	cout.tie(0);
-
-	solve();
+	cout << r;
 }
