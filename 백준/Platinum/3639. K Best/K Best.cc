@@ -25,9 +25,9 @@ void solve()
 		if (cur >= 0) lo = mid;
 		else hi = mid;
 	}
-	// hi is the answer
+	// lo is the answer
 	sort(all(a), [&](array<int, 3>& a, array<int, 3>& b) {
-		return a[0] - hi * a[1] > b[0] - hi * b[1];
+		return a[0] - lo * a[1] > b[0] - lo * b[1];
 	});
 	set<int> res;
 	for (int i = 0; i < k; i++) res.insert(a[i][2]);
