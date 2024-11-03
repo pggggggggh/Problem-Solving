@@ -1,87 +1,145 @@
 #include <bits/stdc++.h>
-#define all(v) (v).begin(), (v).end()
+#define all(x) begin(x), end(x)
+#define sz(x) (int)(x).size()
 #define int long long
 using namespace std;
-using pi = pair<int,int>;
+using pi = pair<int, int>;
 
-struct segtree {
-    using S = int;
+struct splaytree {
+	struct node {
+		node *l, *r, *p;
+		int siz, sum, val;
 
-    static constexpr S e = 0;
+		node(int val)
+		    : l(NULL), r(NULL), p(NULL), siz(1), val(val), sum(val) { }
 
-    static S op(S a, S b) {
-        return a + b;
-    }
+		node(int val, node* p)
+		    : l(NULL), r(NULL), p(p), siz(1), val(val), sum(val) { }
+	};
 
-    int n, sz;
-    vector<S> seg;
+	node* root;
+	vector<node*> ptr;
 
-    segtree(int n, const vector<S> &v = vector<S>()) {
-        assert(n >= v.size());
-        this->n = n;
-        sz = 1;
-        while (sz < n) sz *= 2;
-        seg = vector(2 * sz, e);
-        for (int i = 0; i < v.size(); i++) seg[i + sz] = v[i];
-        for (int i = sz - 1; i >= 1; i--) seg[i] = op(seg[i * 2], seg[i * 2 + 1]);
-    }
+	splaytree(vector<int>& a)
+	    : root(NULL)
+	{
+		root = new node(-1e18);
+		node* x = root;
+		ptr.resize(a.size() + 2);
+		for (int i = 1; i <= a.size(); i++) {
+			ptr[i] = x->r = new node(a[i], x);
+			x = x->r;
+		}
+		x->r = new node(1e18, x);
+		for (int i = a.size(); i >= 1; i--) update(ptr[i]);
+		splay(ptr[a.size() / 2]);
+	}
 
-    void set(int x, const S &val) {
-        x += sz;
-        seg[x] = val;
-        while (x > 1) {
-            x /= 2;
-            seg[x] = op(seg[x * 2], seg[x * 2 + 1]);
-        }
-    }
+	void rotate(node* x)
+	{
+		node* p = x->p;
+		node* b;
+		if (x == p->l) {
+			p->l = b = x->r;
+			x->r = p;
+		} else {
+			p->r = b = x->l;
+			x->l = p;
+		}
+		x->p = p->p;
+		p->p = x;
+		if (b) b->p = p;
+		if (!x->p) root = x;
+		else {
+			if (p == x->p->l) x->p->l = x;
+			else x->p->r = x;
+		}
+		update(p);
+		update(x);
+	}
 
-    void update(int x, const S &val) {
-        x += sz;
-        seg[x] = op(seg[x], val);
+	void splay(node* x, node* g = NULL)
+	{
+		while (x->p != g) {
+			node* p = x->p;
+			if (p->p == g) {
+				rotate(x);
+				break;
+			}
+			auto pp = p->p;
+			if ((p->l == x) == (pp->l == p)) {
+				rotate(p);
+				rotate(x);
+			} else {
+				rotate(x);
+				rotate(x);
+			}
+		}
+		if (!g) root = x;
+	}
 
-        while (x > 1) {
-            x /= 2;
-            seg[x] = op(seg[x * 2], seg[x * 2 + 1]);
-        }
-    }
+	void update(node* x)
+	{
+		x->siz = 1;
+		x->sum = x->val;
+		if (x->l) {
+			x->siz += x->l->siz;
+			x->sum += x->l->sum;
+		}
+		if (x->r) {
+			x->siz += x->r->siz;
+			x->sum += x->r->sum;
+		}
+	}
 
-    S query(int l, int r) {
-        S res = e;
-        l += sz, r += sz;
-        for (; l <= r; l >>= 1, r >>= 1) {
-            if (l & 1) res = op(res, seg[l++]);
-            if (!(r & 1)) res = op(res, seg[r--]);
-        }
-        return res;
-    }
+	void kth(int k)
+	{
+		node* x = root;
+		while (1) {
+			while (x->l && x->l->siz > k) x = x->l;
+			if (x->l) k -= x->l->siz;
+			if (!k--) break;
+			x = x->r;
+		}
+		splay(x);
+	}
 
-    /* only applicable in int/sum segtree */
-    int kth_element(int k) {
-        int node = 1;
-        while (node < sz) {
-            if (seg[node * 2] < k) {
-                k -= seg[node * 2];
-                node = node * 2 + 1;
-            } else node = node * 2;
-        }
-        return node - sz;
-    }
+	node* gather(int s, int e)
+	{
+		kth(e + 1);
+		auto tmp = root;
+		kth(s - 1);
+		splay(tmp, root);
+		return root->r->l;
+	}
 };
 
-signed main() {
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
-    int n, m, k;
-    cin >> n >> m >> k;
-    vector<int> a(n);
-    for (int i = 0; i < n; i++) {
-        cin >> a[i];
-    }
-    segtree seg(n, a);
-    for (int i = 0; i < m + k; i++) {
-        int w, x, y;
-        cin >> w >> x >> y;
-        if (w == 1) seg.set(x - 1, y);
-        else cout << seg.query(x - 1, y - 1) << '\n';
-    }
+void solve()
+{
+	int n, m, k;
+	cin >> n >> m >> k;
+	vector<int> a(n + 1);
+	for (int i = 1; i <= n; i++) cin >> a[i];
+	splaytree spt(a);
+	int q = m + k;
+	while (q--) {
+		int x, y, z;
+		cin >> x >> y >> z;
+		if (x == 1) {
+			spt.kth(y);
+			spt.root->val = z;
+			spt.update(spt.root);
+		} else {
+			cout << spt.gather(y, z)->sum << '\n';
+		}
+	}
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	solve();
 }
