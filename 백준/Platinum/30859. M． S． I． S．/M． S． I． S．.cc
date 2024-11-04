@@ -1,7 +1,6 @@
 #include <bits/stdc++.h>
 #define all(x) begin(x), end(x)
 #define sz(x) (int)(x).size()
-#define int long long
 using namespace std;
 using pi = pair<int, int>;
 
