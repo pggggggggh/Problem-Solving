@@ -5,6 +5,8 @@
 using namespace std;
 using pi = pair<int, int>;
 
+int dp[2][10005];
+
 void solve()
 {
 	int n;
@@ -13,17 +15,15 @@ void solve()
 	for (int i = 1; i <= n; i++) cin >> a[i].first;
 	for (int i = 1; i <= n; i++) cin >> a[i].second;
 	sort(all(a));
-	vector dp(2, vector<int>(n + 2));
 	int res = 0;
 	for (int i = 1; i <= n; i++) {
-		int cur = i % 2;
 		for (int j = 0; j < i; j++) {
 			if (a[i].second > a[j].second)
-				dp[cur][i] = max(dp[cur][i], dp[1 - cur][j] + a[i].first + a[i].second);
-			dp[cur][j] = dp[1 - cur][j] + max(a[i].first, a[i].second);
+				dp[i & 1][i] = max(dp[i & 1][i], dp[~i & 1][j] + a[i].first + a[i].second);
+			dp[i & 1][j] = dp[~i & 1][j] + max(a[i].first, a[i].second);
 		}
 	}
-	for (int i = 0; i <= n; i++) res = max(dp[n % 2][i], res);
+	for (int i = 0; i <= n; i++) res = max(dp[n & 1][i], res);
 	cout << res;
 }
 
