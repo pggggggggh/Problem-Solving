@@ -9,7 +9,7 @@ void solve()
 	int n, m;
 	cin >> n >> m;
 	vector<vector<int>> adj(n + 1);
-	vector<int> r(n + 1), l(m + 1);
+	vector<int> r(n + 1, -1), l(m + 1, -1);
 	for (int i = 1; i <= n; i++) {
 		int k;
 		cin >> k;
@@ -20,10 +20,10 @@ void solve()
 		}
 	}
 	vector<int> vis(n + 1);
-	function<int(int)> go = [&](int u) {
+	function<int(int)> dfs = [&](int u) {
 		vis[u] = 1;
 		for (auto& v : adj[u]) {
-			if (l[v] == 0 || (!vis[l[v]] && go(l[v]))) {
+			if (l[v] == -1 || (!vis[l[v]] && dfs(l[v]))) {
 				r[u] = v;
 				l[v] = u;
 				return 1;
@@ -33,9 +33,9 @@ void solve()
 	};
 	int res = 0;
 	for (int i = 1; i <= n; i++) {
-		if (r[i] == 0) {
+		if (r[i] == -1) {
 			fill(all(vis), 0);
-			res += go(i);
+			res += dfs(i);
 		}
 	}
 	cout << res;
