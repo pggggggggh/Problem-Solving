@@ -7,6 +7,32 @@ using pi = pair<int, int>;
 
 const int MOD = 1e9 + 7;
 
+struct union_find {
+	int n;
+	vector<int> par;
+
+	union_find(int n)
+	    : n(n)
+	{
+		par.resize(n);
+		for (int i = 0; i < n; i++) par[i] = i;
+	}
+
+	int find(int x)
+	{
+		if (par[x] == x) return x;
+		return par[x] = find(par[x]);
+	}
+
+	void uni(int x, int y)
+	{
+		x = find(x);
+		y = find(y);
+		if (x == y) return;
+		par[y] = x;
+	}
+};
+
 void solve()
 {
 	vector<int> modpow = { 1 };
@@ -14,47 +40,22 @@ void solve()
 
 	int n, m;
 	cin >> n >> m;
-	vector<vector<pi>> adj(n);
-	int cost = 1;
-	for (int i = 1; i <= m; i++) {
+	vector<pi> edges;
+	for (int i = 0; i < m; i++) {
 		int x, y;
 		cin >> x >> y;
-		adj[x].emplace_back(y, cost);
-		adj[y].emplace_back(x, cost);
-		cost++;
+		edges.emplace_back(x, y);
 	}
-	cost--;
+	union_find uf(n);
 	int res = 0;
-	while (cost) {
-		queue<int> q;
-		q.push(0);
-		vector<int> vis(n);
-		vector<pi> from(n);
-		from[0] = { -1, -1 };
-		while (!q.empty()) {
-			int u = q.front();
-			q.pop();
-			if (vis[u]) continue;
-			vis[u] = 1;
-			if (u == n - 1) break;
-			for (int i = 0; i < adj[u].size(); i++) {
-				auto& [v, d] = adj[u][i];
-				if (vis[v] || d < cost) continue;
-				from[v] = { u, i };
-				q.push(v);
-			}
+	for (int i = m - 1; i >= 0; i--) {
+		auto& [u, v] = edges[i];
+		if ((uf.find(u) == uf.find(0) && uf.find(v) == uf.find(n - 1))
+		    || (uf.find(v) == uf.find(0) && uf.find(u) == uf.find(n - 1))) {
+			res = (res + modpow[i]) % MOD;
+		} else {
+			uf.uni(u, v);
 		}
-		if (vis[n - 1]) {
-			res = (res + modpow[cost - 1]) % MOD;
-			int cur = n - 1;
-			while (1) {
-				pi& p = from[cur];
-				cur = p.first;
-				if (cur == -1) break;
-				if (cost == adj[cur][p.second].second) adj[cur][p.second].second = 0;
-			}
-		}
-		cost--;
 	}
 	cout << res;
 }
