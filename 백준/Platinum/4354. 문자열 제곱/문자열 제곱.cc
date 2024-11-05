@@ -9,7 +9,7 @@ void solve()
 	int n = s.size();
 	vector<int> fail(n);
 	for (int i = 1, j = 0; i < n; i++) {
-		while (j > 0 && s[i] != s[j]) j = fail[j - 1];
+		if (j > 0 && s[i] != s[j]) j = fail[j - 1];
 		if (s[i] == s[j]) fail[i] = ++j;
 	}
 	if (n % (n - fail[n - 1])) cout << 1 << '\n';
