@@ -8,7 +8,7 @@ using pi = pair<int, int>;
 const int MOD = 1e9 + 7;
 
 int n, m, k;
-int dp[35][35][35][1005];
+int dp[35][35][35][258];
 
 int recur(int now, int left, int from, int state)
 {
