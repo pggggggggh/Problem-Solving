@@ -21,14 +21,13 @@ int go(int u)
 	}
 	if (top == id[u]) {
 		vector<int> scc;
-		while (stk.back() != u) {
-			scc.push_back(stk.back());
-			finished[stk.back()] = 1;
+		while (1) {
+			int tmp = stk.back();
+			finished[tmp] = 1;
+			scc.push_back(tmp);
 			stk.pop_back();
+			if (tmp == u) break;
 		}
-		scc.push_back(stk.back());
-		finished[stk.back()] = 1;
-		stk.pop_back();
 		sort(all(scc));
 		sccs.push_back(scc);
 	}
