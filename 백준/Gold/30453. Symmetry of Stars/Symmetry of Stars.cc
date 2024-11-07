@@ -13,7 +13,7 @@ inline ll hsh(pi p)
 	return (((ll)(p.first + 1234567890) * 1234567890 + p.second + 1234567890) % 99999989 + 99999989) % 99999989;
 }
 
-unsigned cnt[100000000];
+short cnt[100000000];
 
 void solve()
 {
