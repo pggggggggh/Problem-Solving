@@ -14,7 +14,7 @@ void solve()
 	string s;
 	cin >> n >> s;
 	int lo = 0, hi = n + 1;
-	map<int, int> mp;
+	map<int, bool> mp;
 	while (lo + 1 < hi) {
 		mp.clear();
 		int mid = lo + hi >> 1;
@@ -37,7 +37,7 @@ void solve()
 			hsh2 = (hsh2 - (s[i - mid] - 'a') * pow2 % m2 + m2) % m2;
 			hsh2 = (hsh2 * 26) % m2;
 			hsh2 = (hsh2 + s[i] - 'a') % m2;
-			if (mp[hsh1 * m2 + hsh2]) {
+			if (mp.find(hsh1 * m2 + hsh2) != mp.end()) {
 				flag = 1;
 				break;
 			}
