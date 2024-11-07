@@ -4,18 +4,21 @@
 #pragma GCC optimize("unroll-loops")
 #define all(v) (v).begin(), (v).end()
 #define sz(v) (int)(v).size()
-#define ll long long
+#define int long long
 using namespace std;
 using pi = pair<int, int>;
 
-constexpr int MOD = 59999971;
+constexpr int m1 = 5003;
+constexpr int m2 = 5021;
+constexpr int m3 = 2000000000LL;
 
-inline ll hsh(pi& p)
+inline int hsh(pi& p)
 {
-	return (((ll)(p.first + 1234567890) * 1234567890 + p.second + 1234567890) % MOD + MOD) % MOD;
+	int h = (p.first + m3) * m3 + p.second + m3;
+	return (h % m1) * m2 + h % m2;
 }
 
-short cnt[59999971];
+short cnt[30000000];
 
 void solve()
 {
@@ -28,10 +31,10 @@ void solve()
 	for (int i = 0; i < n; i++) {
 		for (int j = i; j < n; j++) {
 			pi p = { a[i].first + a[j].first, a[i].second + a[j].second };
-			auto& ret = cnt[hsh(p)];
-			if (i == j) ret += 1;
-			else ret += 2;
-			res = max(res, (int)ret);
+			auto& ref = cnt[hsh(p)];
+			if (i == j) ref += 1;
+			else ref += 2;
+			res = max(res, (int)ref);
 		}
 	}
 	cout << res;
