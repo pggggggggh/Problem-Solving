@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 #pragma GCC target("avx2")
-#pragma GCC optimize("O3")
+#pragma GCC optimize("Ofast")
 #pragma GCC optimize("unroll-loops")
 #define all(v) (v).begin(), (v).end()
 #define sz(v) (int)(v).size()
@@ -24,9 +24,11 @@ void solve()
 
 	int res = 0;
 	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < n; j++) {
+		for (int j = i; j < n; j++) {
 			pi p = { a[i].first + a[j].first, a[i].second + a[j].second };
-			res = max(res, (int)++cnt[hsh(p)]);
+			if (i == j) cnt[hsh(p)] += 1;
+			else cnt[hsh(p)] += 2;
+			res = max(res, (int)cnt[hsh(p)]);
 		}
 	}
 	cout << res;
