@@ -10,16 +10,29 @@ void solve()
 	cin >> n;
 	vector<pi> a(n);
 	for (int i = 0; i < n; i++) cin >> a[i].first >> a[i].second;
-	map<pi, int> mp;
+	vector<pi> v;
 	for (int i = 0; i < n; i++) {
 		for (int j = i; j < n; j++) {
 			pi p = { a[i].first + a[j].first, a[i].second + a[j].second };
-			if (i == j) mp[p]++;
-			else mp[p] += 2;
+			if (i == j) {
+				v.push_back(p);
+			} else {
+				v.push_back(p);
+				v.push_back(p);
+			}
 		}
 	}
-	int ans = 1;
-	for (auto& [_, cnt] : mp) ans = max(ans, cnt);
+	sort(all(v));
+	int ans = 0;
+	int cur = 1;
+	for (int i = 1; i < v.size(); i++) {
+		if (v[i] == v[i - 1]) cur++;
+		else {
+			ans = max(ans, cur);
+			cur = 1;
+		}
+	}
+	ans = max(ans, cur);
 	cout << ans;
 }
 
