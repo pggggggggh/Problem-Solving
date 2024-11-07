@@ -28,7 +28,7 @@ void solve()
 	};
 	dfs(0, -1);
 	vector<int> ans(n);
-	for (int i = 0; i < n; i++) ans[0] += dist1[i];
+	ans[0] = accumulate(all(dist1), 0LL);
 	function<void(int)> reroot = [&](int u) {
 		for (auto& [v, d] : g[u]) {
 			ans[v] = ans[u] + (n - 2 * sub[v]) * d;
