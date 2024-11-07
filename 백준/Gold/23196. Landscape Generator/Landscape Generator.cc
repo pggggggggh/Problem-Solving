@@ -9,46 +9,53 @@ void solve()
 {
 	int n, k;
 	cin >> n >> k;
-	vector<int> a(n + 3), imos1(n + 3), imos2(n + 3);
-	vector<int> imos_lazy(n + 3);
+	vector<int> amos(n + 3), bmos(n + 3);
 	while (k--) {
 		int s, e;
 		char x;
 		cin >> x >> s >> e;
-		if (x == 'R') {
-			imos_lazy[s]++;
-			imos_lazy[e + 1]--;
-		}
-		if (x == 'D') {
-			imos_lazy[s]--;
-			imos_lazy[e + 1]++;
-		}
+		int mid = s + e >> 1;
 		if (x == 'H') {
-			imos2[s]++;
-			imos2[e + 2]++;
-			if ((e - s) & 1) {
-				imos2[(s + e + 1) / 2]--;
-				imos2[(s + e + 1) / 2 + 1]--;
+			amos[s]++;
+			amos[mid + 1] -= 2;
+			amos[e + 1]++;
+			bmos[s] -= s - 1;
+			if ((e - s + 1) % 2) {
+				bmos[mid + 1] += mid * 2;
+				bmos[e + 1] -= mid * 2;
 			} else {
-				imos2[(s + e) / 2 + 1] -= 2;
+				bmos[mid + 1] += mid * 2 + 1;
+				bmos[e + 1] -= mid * 2 + 1;
 			}
+			bmos[e + 1] += s - 1;
 		}
 		if (x == 'V') {
-			imos2[s]--;
-			imos2[e + 2]--;
-			if ((e - s) & 1) {
-				imos2[(s + e + 1) / 2]++;
-				imos2[(s + e + 1) / 2 + 1]++;
+			amos[s]--;
+			amos[mid + 1] += 2;
+			amos[e + 1]--;
+			bmos[s] += s - 1;
+			if ((e - s + 1) % 2) {
+				bmos[mid + 1] -= mid * 2;
+				bmos[e + 1] += mid * 2;
 			} else {
-				imos2[(s + e) / 2 + 1] += 2;
+				bmos[mid + 1] -= mid * 2 + 1;
+				bmos[e + 1] += mid * 2 + 1;
 			}
+			bmos[e + 1] -= s - 1;
+		}
+		if (x == 'R') {
+			bmos[s]++;
+			bmos[e + 1]--;
+		}
+		if (x == 'D') {
+			bmos[s]--;
+			bmos[e + 1]++;
 		}
 	}
-	for (int i = 1; i <= n; i++) imos1[i] = imos1[i - 1] + imos2[i];
-	int cur = 0;
+	int a = 0, b = 0;
 	for (int i = 1; i <= n; i++) {
-		cur += imos1[i] + imos_lazy[i];
-		cout << cur << '\n';
+		a += amos[i], b += bmos[i];
+		cout << a * i + b << '\n';
 	}
 }
 
