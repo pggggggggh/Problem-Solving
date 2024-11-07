@@ -8,7 +8,7 @@
 using namespace std;
 using pi = pair<int, int>;
 
-int hsh(pi p)
+inline int hsh(pi p)
 {
 	return (((p.first + 1234567890) * 1234567890 + p.second + 1234567890) % 99999989 + 99999989) % 99999989;
 }
@@ -26,8 +26,7 @@ void solve()
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++) {
 			pi p = { a[i].first + a[j].first, a[i].second + a[j].second };
-			cnt[hsh(p)]++;
-			res = max(res, (int)cnt[hsh(p)]);
+			res = max(res, (int)++cnt[hsh(p)]);
 		}
 	}
 	cout << res;
