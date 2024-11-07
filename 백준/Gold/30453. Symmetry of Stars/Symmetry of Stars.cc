@@ -9,8 +9,8 @@ using namespace std;
 using pi = pair<int, int>;
 
 constexpr int m1 = 211;
-constexpr int m2 = 223;
-constexpr int m3 = 307;
+constexpr int m2 = 241;
+constexpr int m3 = 269;
 constexpr int inf = 2000000000LL;
 
 inline int hsh(pi& p)
@@ -19,7 +19,7 @@ inline int hsh(pi& p)
 	return (h % m1) * m3 * m3 + (h % m2) * m3 + h % m3;
 }
 
-short cnt[20000000];
+short cnt[16000000];
 
 void solve()
 {
