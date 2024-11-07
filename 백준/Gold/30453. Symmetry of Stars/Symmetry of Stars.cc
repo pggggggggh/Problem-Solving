@@ -25,10 +25,11 @@ void solve()
 	int res = 0;
 	for (int i = 0; i < n; i++) {
 		for (int j = i; j < n; j++) {
-			pi p = { a[i].first + a[j].first, a[i].second + a[j].second };
-			if (i == j) cnt[hsh(p)] += 1;
-			else cnt[hsh(p)] += 2;
-			res = max(res, (int)cnt[hsh(p)]);
+			const pi p = { a[i].first + a[j].first, a[i].second + a[j].second };
+			auto& ref = cnt[hsh(p)];
+			if (i == j) ref += 1;
+			else ref += 2;
+			res = max(res, (int)ref);
 		}
 	}
 	cout << res;
