@@ -28,10 +28,10 @@ void solve()
 	for (int i = 0; i < n; i++) {
 		for (int j = i; j < n; j++) {
 			pi p = { a[i].first + a[j].first, a[i].second + a[j].second };
-			auto ret = &cnt[hsh(p)];
-			if (i == j) *ret += 1;
-			else *ret += 2;
-			res = max(res, (int)*ret);
+			auto& ret = cnt[hsh(p)];
+			if (i == j) ret += 1;
+			else ret += 2;
+			res = max(res, (int)ret);
 		}
 	}
 	cout << res;
