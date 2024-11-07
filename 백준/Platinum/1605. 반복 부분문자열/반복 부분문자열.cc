@@ -1,4 +1,7 @@
 #include <bits/stdc++.h>
+#pragma GCC target("avx2")
+#pragma GCC optimize("Ofast")
+#pragma GCC optimize("unroll-loops")
 #define all(x) begin(x), end(x)
 #define sz(x) (int)(x).size()
 #define int long long
