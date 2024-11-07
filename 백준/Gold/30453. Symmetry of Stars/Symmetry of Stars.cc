@@ -8,12 +8,14 @@
 using namespace std;
 using pi = pair<int, int>;
 
-inline ll hsh(pi p)
+constexpr int MOD = 59999971;
+
+inline ll hsh(pi& p)
 {
-	return (((ll)(p.first + 1234567890) * 1234567890 + p.second + 1234567890) % 99999989 + 99999989) % 99999989;
+	return (((ll)(p.first + 1234567890) * 1234567890 + p.second + 1234567890) % MOD + MOD) % MOD;
 }
 
-short cnt[100000000];
+short cnt[59999971];
 
 void solve()
 {
@@ -25,11 +27,10 @@ void solve()
 	int res = 0;
 	for (int i = 0; i < n; i++) {
 		for (int j = i; j < n; j++) {
-			const pi p = { a[i].first + a[j].first, a[i].second + a[j].second };
-			auto& ref = cnt[hsh(p)];
-			if (i == j) ref += 1;
-			else ref += 2;
-			res = max(res, (int)ref);
+			pi p = { a[i].first + a[j].first, a[i].second + a[j].second };
+			if (i == j) cnt[hsh(p)] += 1;
+			else cnt[hsh(p)] += 2;
+			res = max(res, (int)cnt[hsh(p)]);
 		}
 	}
 	cout << res;
