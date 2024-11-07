@@ -1,8 +1,16 @@
 #include <bits/stdc++.h>
 #define all(v) (v).begin(), (v).end()
+#define sz(v) (int)(v).size()
 #define int long long
 using namespace std;
 using pi = pair<int, int>;
+
+int hsh(pi p)
+{
+	return (((p.first + 1234567890) * 1234567890 + p.second + 1234567890) % 99999989 + 99999989) % 99999989;
+}
+
+unsigned cnt[100000000];
 
 void solve()
 {
@@ -10,30 +18,16 @@ void solve()
 	cin >> n;
 	vector<pi> a(n);
 	for (int i = 0; i < n; i++) cin >> a[i].first >> a[i].second;
-	vector<pi> v;
+
+	int res = 0;
 	for (int i = 0; i < n; i++) {
-		for (int j = i; j < n; j++) {
+		for (int j = 0; j < n; j++) {
 			pi p = { a[i].first + a[j].first, a[i].second + a[j].second };
-			if (i == j) {
-				v.push_back(p);
-			} else {
-				v.push_back(p);
-				v.push_back(p);
-			}
+			cnt[hsh(p)]++;
+			res = max(res, (int)cnt[hsh(p)]);
 		}
 	}
-	sort(all(v));
-	int ans = 0;
-	int cur = 1;
-	for (int i = 1; i < v.size(); i++) {
-		if (v[i] == v[i - 1]) cur++;
-		else {
-			ans = max(ans, cur);
-			cur = 1;
-		}
-	}
-	ans = max(ans, cur);
-	cout << ans;
+	cout << res;
 }
 
 signed main()
