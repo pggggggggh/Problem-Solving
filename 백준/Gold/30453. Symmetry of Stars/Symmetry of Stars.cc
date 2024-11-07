@@ -4,13 +4,13 @@
 #pragma GCC optimize("unroll-loops")
 #define all(v) (v).begin(), (v).end()
 #define sz(v) (int)(v).size()
-#define int long long
+#define ll long long
 using namespace std;
 using pi = pair<int, int>;
 
-inline int hsh(pi p)
+inline ll hsh(pi p)
 {
-	return (((p.first + 1234567890) * 1234567890 + p.second + 1234567890) % 99999989 + 99999989) % 99999989;
+	return (((ll)(p.first + 1234567890) * 1234567890 + p.second + 1234567890) % 99999989 + 99999989) % 99999989;
 }
 
 unsigned cnt[100000000];
