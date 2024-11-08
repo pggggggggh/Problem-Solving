@@ -28,10 +28,8 @@ void solve()
 			int res = 1e18, l = y, r = z;
 			while ((l % sq) && l <= r) res = min(res, a[l++]);
 			while (((r + 1) % sq) && l <= r) res = min(res, a[r--]);
-			while (l <= r) {
-				res = min(res, bkt[l / sq]);
-				l += sq;
-			}
+			if (l <= r)
+				for (int i = l / sq; i <= r / sq; i++) res = min(res, bkt[i]);
 			cout << res << '\n';
 		}
 	}
