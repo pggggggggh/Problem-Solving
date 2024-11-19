@@ -54,12 +54,6 @@ void solve()
 	recur(0);
 	string s = "";
 	for (int i = 0; i < k - 1; i++) s += ('A' + i);
-	for (auto& x : vs) {
-		if (deg[x].first == 0 || deg[x].first != deg[x].second) {
-			cout << "NO";
-			return;
-		}
-	}
 	dfs(s);
 	int goal = 1;
 	for (int i = n - k + 1; i <= n; i++) {
