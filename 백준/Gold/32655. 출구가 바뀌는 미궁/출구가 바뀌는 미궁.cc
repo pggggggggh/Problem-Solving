@@ -44,7 +44,7 @@ void solve()
 	for (int i = 0; i < t; i++) {
 		int x;
 		cin >> x;
-		int cycle = dist[x] / len;
+		int cycle = dist[x] / len; // 몇번째 사이클?
 		int ans;
 		if ((dist[x] / k) % t == i) {
 			ans = dist[x];
@@ -53,6 +53,7 @@ void solve()
 		} else { // <i
 			ans = (cycle)*len + i * k;
 		}
+		// cout << dist[x] << ":" << ans << '\n';
 		res = min(res, ans);
 	}
 	cout << res;
