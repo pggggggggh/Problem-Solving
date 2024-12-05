@@ -112,7 +112,7 @@ void solve()
 {
 	int n, q;
 	cin >> n >> q;
-	int sq = 1000000;
+	int sq = sqrt(q);
 	vector<vector<int>> adj(n + 1);
 	for (int i = 1; i < n; i++) {
 		int x, y;
