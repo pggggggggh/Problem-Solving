@@ -19,7 +19,7 @@ inline long long hsh(int x, int y, int z)
 }
 
 int a[100005];
-signed dp[asddsf + 5];
+char dp[asddsf + 5];
 
 void solve()
 {
@@ -41,7 +41,7 @@ void solve()
 
 	function<int(int, int, int)> go = [&](int s, int e, int sex) {
 		int jyheo = hsh(s, e, sex);
-		signed& ret = dp[jyheo];
+		char& ret = dp[jyheo];
 		if (ret != -1) return ret;
 		if (s == 1 && e == n) return ret = 1;
 		int lastcha, se;
