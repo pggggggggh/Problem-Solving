@@ -11,69 +11,51 @@ void solve()
 	vector<int> a(n + 2);
 	a[0] = 1e18;
 	a[n + 1] = -1e18;
-	for (int i = 1; i <= n; i++) cin >> a[i];
+	vector<pi> b;
+	for (int i = 1; i <= n; i++) {
+		cin >> a[i];
+		if (i > 1) b.push_back({ a[i] - a[i - 1], i });
+	}
 	if (n == 1) {
 		cout << "YES\n";
 		return;
 	}
-	function<int(int)> go = [&](int s) {
-		int e = s;
-		int se = 0; // 0이면 s, 1이면 e
-		int cha = 0;
-		while (1) {
-			if (s == 1 && e == n) return 1;
-			if (se) {
-				if (a[e] - a[s - 1] >= 2 * cha && a[e + 1] - a[e] >= 2 * cha) {
-					if (rand() % 2) {
-						cha = a[e] - a[s - 1];
-						s--;
-						se = 0;
-					} else {
-						cha = a[e + 1] - a[e];
-						e++;
-						se = 1;
-					}
-				} else if (a[e] - a[s - 1] >= 2 * cha) {
-					cha = a[e] - a[s - 1];
-					s--;
-					se = 0;
-				} else if (a[e + 1] - a[e] >= 2 * cha) {
-					cha = a[e + 1] - a[e];
-					e++;
-					se = 1;
-				} else return 0;
-			} else {
-				if (a[s] - a[s - 1] >= 2 * cha && a[e + 1] - a[s] >= 2 * cha) {
-					if (rand() % 2) {
-						cha = a[s] - a[s - 1];
-						s--;
-						se = 0;
-					} else {
-						cha = a[e + 1] - a[s];
-						e++;
-						se = 1;
-					}
-				} else if (a[s] - a[s - 1] >= 2 * cha) {
-					cha = a[s] - a[s - 1];
-					s--;
-					se = 0;
-				} else if (a[e + 1] - a[s] >= 2 * cha) {
-					cha = a[e + 1] - a[s];
-					e++;
-					se = 1;
-				} else return 0;
+	map<array<int, 4>, int> dp;
+	function<int(int, int, int, int)> go = [&](int s, int e, int se, int lastcha) {
+		if (dp.find({ s, e, se, lastcha }) != dp.end()) {
+			return dp[{ s, e, se, lastcha }];
+		}
+		int& ret = dp[{ s, e, se, lastcha }];
+		if (s == 1 && e == n) return ret = 1;
+		if (se == 0) {
+			if (a[s] - a[s - 1] >= 2 * lastcha) {
+				if (go(s - 1, e, 0, a[s] - a[s - 1])) return ret = 1;
+			}
+			if (a[e + 1] - a[s] >= 2 * lastcha) {
+				if (go(s, e + 1, 1, a[e + 1] - a[s])) return ret = 1;
+			}
+		} else {
+			if (a[e + 1] - a[e] >= 2 * lastcha) {
+				if (go(s, e + 1, 1, a[e + 1] - a[e])) return ret = 1;
+			}
+			if (a[e] - a[s - 1] >= 2 * lastcha) {
+				if (go(s - 1, e, 0, a[e] - a[s - 1])) return ret = 1;
 			}
 		}
+		return ret = 0;
 	};
-	for (int i = 1; i <= n; i++) {
-		int flag = 0;
-		for (int tc = 0; tc < 2000; tc++) {
-			if (go(i)) {
-				flag = 1;
-				break;
-			}
-		}
-		if (flag) cout << "YES\n";
+	sort(all(b));
+	set<int> candi;
+	for (int i = 1; i <= n; i++) candi.insert(i);
+	for (int i = 0; i < min((int)b.size(), 500LL); i++) {
+		int idx = b[i].second;
+		candi.insert(idx);
+		if (idx < n) candi.insert(idx + 1);
+		candi.insert(idx - 1);
+	}
+	for (auto& i : candi) {
+		dp.clear();
+		if (go(i, i, 0, 0)) cout << "YES\n";
 		else cout << "NO\n";
 	}
 }
