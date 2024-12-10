@@ -9,12 +9,9 @@ using pi = pair<int, int>;
 
 const int m = 1e3;
 
-int n;
-int fuck;
-
 inline long long hsh(int x, int y, int z)
 {
-	return (x * m * m + y * m + z) * m % ((int)1e9 + 7) + fuck;
+	return (x * m * m + y * m + z);
 }
 
 int a[100005];
@@ -22,6 +19,7 @@ unordered_map<long long, int> dp;
 
 void solve()
 {
+	int n;
 	cin >> n;
 	for (int i = 0; i <= n + 1; i++) a[i] = 0;
 	a[0] = 1e9;
@@ -80,9 +78,8 @@ void solve()
 		}
 		return ret = 0;
 	};
-	dp.clear();
 	for (int i = 1; i <= n; i++) {
-		fuck = i;
+		dp.clear();
 		if (go(i, i, 0)) cout << "YES\n";
 		else cout << "NO\n";
 	}
