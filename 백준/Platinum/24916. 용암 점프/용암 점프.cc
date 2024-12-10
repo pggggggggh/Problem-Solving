@@ -7,8 +7,8 @@
 using namespace std;
 using pi = pair<int, int>;
 
-const int m = 9679;
-const int asddsf = 3917;
+const int m = 100000717;
+const int asddsf = 4349;
 
 int n;
 int fuck;
@@ -19,7 +19,7 @@ inline long long hsh(int x, int y, int z)
 }
 
 int a[100005];
-int dp[asddsf + 5];
+signed dp[asddsf + 5];
 
 void solve()
 {
@@ -41,7 +41,7 @@ void solve()
 
 	function<int(int, int, int)> go = [&](int s, int e, int sex) {
 		int jyheo = hsh(s, e, sex);
-		int& ret = dp[jyheo];
+		signed& ret = dp[jyheo];
 		if (ret != -1) return ret;
 		if (s == 1 && e == n) return ret = 1;
 		int lastcha, se;
@@ -79,8 +79,8 @@ void solve()
 		}
 		return ret = 0;
 	};
+	memset(dp, -1, sizeof(dp));
 	for (int i = 1; i <= n; i++) {
-		memset(dp, -1, sizeof(dp));
 		fuck = i;
 		if (go(i, i, 0)) cout << "YES\n";
 		else cout << "NO\n";
