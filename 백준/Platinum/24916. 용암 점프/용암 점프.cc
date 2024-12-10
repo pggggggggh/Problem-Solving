@@ -1,29 +1,28 @@
-#pragma GCC target("avx2")
-#pragma GCC optimize("O3")
-#pragma GCC optimize("unroll-loops")
+// #pragma GCC target("avx2")
+// #pragma GCC optimize("O3")
+// #pragma GCC optimize("unroll-loops")
 #include <bits/stdc++.h>
 #define all(x) begin(x), end(x)
-// #define int long long
+#define int long long
 using namespace std;
 using pi = pair<int, int>;
 
 const int m = 1e3;
 
-inline long long hsh(int x, int y, int z)
+inline int hsh(int x, int y, int z)
 {
-	return (x * m * m + y * m + z);
+	return (x * m * m + y * m + z) % (int)1e12;
 }
 
 int a[100005];
-unordered_map<long long, int> dp;
 
 void solve()
 {
 	int n;
 	cin >> n;
 	for (int i = 0; i <= n + 1; i++) a[i] = 0;
-	a[0] = 1e9;
-	a[n + 1] = -1e9;
+	a[0] = 1e18;
+	a[n + 1] = -1e18;
 	for (int i = 1; i <= n; i++) {
 		cin >> a[i];
 	}
@@ -35,7 +34,7 @@ void solve()
 		for (int i = 1; i <= n; i++) cout << "NO\n";
 		return;
 	}
-
+	unordered_map<int, int> dp;
 	function<int(int, int, int)> go = [&](int s, int e, int sex) {
 		int jyheo = hsh(s, e, sex);
 		if (dp.find(jyheo) != dp.end()) {
