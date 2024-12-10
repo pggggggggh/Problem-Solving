@@ -3,23 +3,26 @@
 #pragma GCC optimize("unroll-loops")
 #include <bits/stdc++.h>
 #define all(x) begin(x), end(x)
-// #define int long long
+#define int long long
 using namespace std;
 using pi = pair<int, int>;
 
-const int m = 1e3;
+const int m = 9679;
+const int asddsf = 3917;
+
+int n;
+int fuck;
 
 inline long long hsh(int x, int y, int z)
 {
-	return (x * m * m + y * m + z);
+	return (x * m * m + y * m + z) % asddsf;
 }
 
 int a[100005];
-unordered_map<long long, int> dp;
+int dp[asddsf + 5];
 
 void solve()
 {
-	int n;
 	cin >> n;
 	for (int i = 0; i <= n + 1; i++) a[i] = 0;
 	a[0] = 1e9;
@@ -38,10 +41,8 @@ void solve()
 
 	function<int(int, int, int)> go = [&](int s, int e, int sex) {
 		int jyheo = hsh(s, e, sex);
-		if (dp.find(jyheo) != dp.end()) {
-			return dp[jyheo];
-		}
 		int& ret = dp[jyheo];
+		if (ret != -1) return ret;
 		if (s == 1 && e == n) return ret = 1;
 		int lastcha, se;
 		if (sex == 0) {
@@ -79,7 +80,8 @@ void solve()
 		return ret = 0;
 	};
 	for (int i = 1; i <= n; i++) {
-		dp.clear();
+		memset(dp, -1, sizeof(dp));
+		fuck = i;
 		if (go(i, i, 0)) cout << "YES\n";
 		else cout << "NO\n";
 	}
