@@ -1,0 +1,44 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+void solve()
+{
+	int n;
+	cin >> n;
+	vector<int> a(n + 1);
+	vector<int> hol, jak;
+	for (int i = 1; i <= n; i++) {
+		cin >> a[i];
+		if (a[i] % 2) hol.push_back(a[i]);
+		else jak.push_back(a[i]);
+	}
+	sort(all(hol));
+	sort(all(jak));
+	int holmin = 1e18, jakmin = 1e18;
+	for (auto& x : hol) {
+		auto it = upper_bound(all(hol), x);
+		if (it != hol.end()) jakmin = min(jakmin, *it - x);
+		it = upper_bound(all(jak), x);
+		if (it != jak.end()) holmin = min(holmin, *it - x);
+	}
+	for (auto& x : jak) {
+		auto it = upper_bound(all(jak), x);
+		if (it != jak.end()) jakmin = min(jakmin, *it - x);
+		it = upper_bound(all(hol), x);
+		if (it != hol.end()) holmin = min(holmin, *it - x);
+	}
+	if (jakmin == 1e18) jakmin = -1;
+	if (holmin == 1e18) holmin = -1;
+	cout << jakmin << ' ' << holmin;
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	solve();
+}
