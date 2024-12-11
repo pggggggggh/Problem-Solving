@@ -4,7 +4,7 @@
 
 ### 성능 요약
 
-메모리: 13636 KB, 시간: 120 ms
+메모리: 35124 KB, 시간: 168 ms
 
 ### 분류
 
@@ -12,7 +12,7 @@
 
 ### 제출 일자
 
-2024년 12월 12일 01:36:46
+2024년 12월 12일 04:06:46
 
 ### 문제 설명
 
@@ -32,7 +32,7 @@
 
 ### 출력 
 
- <p><mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;"> <mjx-math class="MJX-TEX" aria-hidden="true"><mjx-mi class="mjx-i"><mjx-c class="mjx-c1D441 TEX-I"></mjx-c></mjx-mi></mjx-math><mjx-assistive-mml unselectable="on" display="inline"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>N</mi></math></mjx-assistive-mml><span aria-hidden="true" class="no-mathjax mjx-copytext">$N$</span></mjx-container>줄에 걸쳐 각 건물에 최소한으로 빵을 빼앗기고 도착하는 서로 다른 경로의 수를 출력한다. 만약 그러한 경로가 무수히 많다면 <span style="color:#e74c3c;"><code>-1</code></span>을 출력한다. </p>
+ <p><mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;"> <mjx-math class="MJX-TEX" aria-hidden="true"><mjx-mi class="mjx-i"><mjx-c class="mjx-c1D441 TEX-I"></mjx-c></mjx-mi></mjx-math><mjx-assistive-mml unselectable="on" display="inline"><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>N</mi></math></mjx-assistive-mml><span aria-hidden="true" class="no-mathjax mjx-copytext">$N$</span></mjx-container>줄에 걸쳐 각 건물에 최소한으로 빵을 빼앗기고 도착하는 서로 다른 경로의 수를 출력한다. 만약 그러한 경로가 무수히 많다면 <span style="color: rgb(231, 76, 60); --darkreader-inline-color: #e95849;" data-darkreader-inline-color=""><code>-1</code></span>을 출력한다. </p>
 
 <p>경로가 무수히 많지 않은 경우에, 경로의 수가 매우 클 수 있으므로 <mjx-container class="MathJax" jax="CHTML" style="font-size: 109%; position: relative;"><mjx-math class="MJX-TEX" aria-hidden="true"><mjx-mn class="mjx-n"><mjx-c class="mjx-c39"></mjx-c><mjx-c class="mjx-c39"></mjx-c><mjx-c class="mjx-c38"></mjx-c></mjx-mn><mjx-mstyle><mjx-mspace style="width: 0.167em;"></mjx-mspace></mjx-mstyle><mjx-mn class="mjx-n"><mjx-c class="mjx-c32"></mjx-c><mjx-c class="mjx-c34"></mjx-c><mjx-c class="mjx-c34"></mjx-c></mjx-mn><mjx-mstyle><mjx-mspace style="width: 0.167em;"></mjx-mspace></mjx-mstyle><mjx-mn class="mjx-n"><mjx-c class="mjx-c33"></mjx-c><mjx-c class="mjx-c35"></mjx-c><mjx-c class="mjx-c33"></mjx-c></mjx-mn></mjx-math><mjx-assistive-mml unselectable="on" display="inline"><math xmlns="http://www.w3.org/1998/Math/MathML"><mn>998</mn><mstyle scriptlevel="0"><mspace width="0.167em"></mspace></mstyle><mn>244</mn><mstyle scriptlevel="0"><mspace width="0.167em"></mspace></mstyle><mn>353</mn></math></mjx-assistive-mml><span aria-hidden="true" class="no-mathjax mjx-copytext">$998\,244\,353$</span></mjx-container>로 나눈 나머지를 출력한다.</p>
 

@@ -9,19 +9,59 @@ const int MOD = 998244353;
 void solve()
 {
 	int n, k;
-	cin >> n >> k; // n에서 시작할 것
+	cin >> n >> k;
 	vector<vector<pi>> adj(n + 1);
+	vector<vector<int>> adj0(n + 1);
 	for (int i = 0; i < k; i++) {
 		int s, e, x;
 		cin >> s >> e >> x;
 		adj[s].emplace_back(e, x);
+		if (x == 0) adj0[s].push_back(e);
 	}
-	vector<int> dist(n + 1, 1e18), cnt(n + 1), vis(n + 1);
+
+	int dfn = 0;
+	vector<int> ord(n + 1), fin(n + 1), stk;
+	vector<vector<int>> sccs;
+	function<int(int)> dfs = [&](int u) {
+		ord[u] = ++dfn;
+		stk.push_back(u);
+		int ret = ord[u];
+		for (auto& v : adj0[u]) {
+			if (ord[v] == 0) ret = min(ret, dfs(v));
+			else if (!fin[v]) ret = min(ret, ord[v]);
+		}
+		if (ret == ord[u]) {
+			vector<int> scc;
+			while (1) {
+				int v = stk.back();
+				stk.pop_back();
+				scc.push_back(v);
+				fin[v] = 1;
+				if (v == u) break;
+			}
+			sccs.push_back(scc);
+		}
+		return ret;
+	};
+	for (int i = 1; i <= n; i++) {
+		if (ord[i] == 0) dfs(i);
+	}
+	vector<int> fuck(n + 1), sibal(n + 1);
+	for (int i = 0; i < sccs.size(); i++) {
+		auto& scc = sccs[i];
+
+		for (auto& x : scc) {
+			if (scc.size() > 1) fuck[x] = 1;
+			sibal[x] = -i;
+		}
+	}
+
+	vector<int> dist(n + 1, 1e18), cnt(n + 1), vis(n + 1), zeropass(n + 1);
 	dist[1] = 0, cnt[1] = 1;
-	priority_queue<pi, vector<pi>, greater<pi>> pq;
-	pq.emplace(0, 1);
+	priority_queue<array<int, 3>, vector<array<int, 3>>, greater<array<int, 3>>> pq;
+	pq.push({ 0, sibal[1], 1 });
 	while (!pq.empty()) {
-		auto [d, u] = pq.top();
+		auto [d, foo, u] = pq.top();
 		pq.pop();
 		if (vis[u]) continue;
 		vis[u] = 1;
@@ -29,14 +69,17 @@ void solve()
 			if (dist[u] + cost < dist[v]) {
 				dist[v] = dist[u] + cost;
 				cnt[v] = cnt[u];
-				pq.emplace(dist[v], v);
+				zeropass[v] = max({ fuck[u], zeropass[u], fuck[v] });
+				pq.push({ dist[v], sibal[v], v });
 			} else if (dist[u] + cost == dist[v]) {
 				cnt[v] = (cnt[v] + cnt[u]) % MOD;
+				zeropass[v] = max({ zeropass[v], zeropass[u], fuck[u], fuck[v] });
 			}
 		}
 	}
 	for (int i = 1; i <= n; i++) {
-		cout << cnt[i] << '\n';
+		if (zeropass[i]) cout << "-1\n";
+		else cout << cnt[i] << '\n';
 	}
 }
 
