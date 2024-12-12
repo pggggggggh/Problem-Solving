@@ -1,0 +1,67 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+void solve()
+{
+	int n, k;
+	cin >> n >> k;
+	vector<vector<array<int, 3>>> adj(n + 1);
+	for (int i = 1; i <= k; i++) {
+		int s, e, x;
+		cin >> s >> e >> x;
+		adj[s].push_back({ e, x, i });
+	}
+	vector<int> ans(k + 1);
+	for (int s = 1; s <= n; s++) {
+		vector<set<pi>> g(n + 1);
+		vector<int> dist(n + 1, 1e18), vis(n + 1);
+		vector<pi> p(n + 1);
+		priority_queue<pi, vector<pi>, greater<pi>> pq;
+		dist[s] = 0;
+		pq.emplace(0, s);
+		while (!pq.empty()) {
+			auto [d, u] = pq.top();
+			pq.pop();
+			if (vis[u]) continue;
+			vis[u] = 1;
+			for (auto& [v, cost, fuck] : adj[u]) {
+				if (dist[u] + cost <= dist[v]) {
+					dist[v] = dist[u] + cost;
+					p[v] = { u, fuck };
+					pq.emplace(dist[v], v);
+				}
+			}
+		}
+		for (int i = 1; i <= n; i++) {
+			g[p[i].first].emplace(i, p[i].second);
+		}
+		function<int(int)> dfs = [&](int u) {
+			int ret = 1;
+			for (auto& [v, idx] : g[u]) {
+				int t = dfs(v);
+				ans[idx] += t;
+				ret += t;
+			}
+			return ret;
+		};
+		dfs(s);
+	}
+	int mx = *max_element(ans.begin() + 1, ans.end());
+	vector<int> realans;
+	for (int i = 1; i <= k; i++) {
+		if (ans[i] == mx) realans.push_back(i);
+	}
+	cout << realans.size() << '\n';
+	for (auto& x : realans) cout << x << ' ';
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	solve();
+}
