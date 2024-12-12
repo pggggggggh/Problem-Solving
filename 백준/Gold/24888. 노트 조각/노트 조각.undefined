@@ -1,0 +1,90 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+void solve()
+{
+	int n, k;
+	cin >> n >> k;
+	vector<vector<pi>> adj(n + 1);
+	for (int i = 0; i < k; i++) {
+		int s, e, x;
+		cin >> s >> e >> x;
+		adj[s].emplace_back(e, x);
+		adj[e].emplace_back(s, x);
+	}
+	vector<int> a(n + 1);
+	for (int i = 1; i <= n; i++) cin >> a[i];
+	vector<int> dist(n + 1, 1e18), vis(n + 1);
+	priority_queue<pi, vector<pi>, greater<pi>> pq;
+	vector<vector<pi>> incoming(n + 1);
+	dist[1] = 0;
+	pq.emplace(0, 1);
+	while (!pq.empty()) {
+		auto [d, u] = pq.top();
+		pq.pop();
+		if (vis[u]) continue;
+		vis[u] = 1;
+		for (auto& [v, cost] : adj[u]) {
+			if (dist[u] + cost < dist[v]) {
+				dist[v] = dist[u] + cost;
+				incoming[v].clear();
+				incoming[v].emplace_back(u, cost);
+				pq.emplace(dist[v], v);
+			} else if (dist[u] + cost == dist[v]) {
+				incoming[v].emplace_back(u, cost);
+			}
+		}
+	}
+	vector<vector<int>> adj2(n + 1);
+	vector<int> indeg(n + 1);
+	for (int i = 1; i <= n; i++) {
+		for (auto& [x, y] : incoming[i]) {
+			adj2[x].push_back(i);
+			indeg[i]++;
+		}
+	}
+	queue<int> q;
+	vector<int> dp(n + 1), p(n + 1);
+	for (int i = 1; i <= n; i++) {
+		if (!indeg[i]) {
+			q.push(i);
+			if (a[i]) dp[i] = 1;
+		}
+	}
+	while (!q.empty()) {
+		auto u = q.front();
+		q.pop();
+		for (auto& v : adj2[u]) {
+			if (dp[u] + a[v] >= dp[v]) {
+				dp[v] = dp[u] + a[v];
+				p[v] = u;
+			}
+			indeg[v]--;
+			if (!indeg[v]) q.push(v);
+		}
+	}
+	if (dp[n] < accumulate(all(a), 0LL)) {
+		cout << "-1";
+		return;
+	}
+	int cur = n;
+	vector<int> path;
+	while (cur != 0) {
+		path.push_back(cur);
+		cur = p[cur];
+	}
+	reverse(all(path));
+	cout << path.size() << '\n';
+	for (auto& x : path) cout << x << ' ';
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	solve();
+}
