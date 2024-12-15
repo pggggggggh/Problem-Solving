@@ -1,0 +1,34 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+void solve()
+{
+	int n, k, r;
+	cin >> k >> r;
+	n = 1LL << k;
+	double pastsum = 0;
+	double res = 0;
+	for (int i = k; i >= 1; i--) {
+		int t = (1LL << i) - 1;
+		if (n - r < t) continue;
+		double cur = 1;
+		for (int j = 0; j < t; j++) {
+			cur *= (double)(n - r - t + 1 + j) / (n - t + j);
+		}
+		cur -= pastsum;
+		res += i * cur;
+		pastsum += cur;
+	}
+	cout << setprecision(5) << fixed << res;
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	solve();
+}
