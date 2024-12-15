@@ -1,0 +1,31 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+void solve()
+{
+	int n;
+	cin >> n;
+	vector<array<int, 3>> a(n);
+	for (int i = 0; i < n; i++) {
+		cin >> a[i][0] >> a[i][1];
+		a[i][2] = i;
+	}
+	sort(all(a), [&](array<int, 3>& x, array<int, 3>& y) {
+		int xval = x[0] * 10000 + x[1] * y[0];
+		int yval = y[0] * 10000 + y[1] * x[0];
+		if (xval == yval) return x[2] < y[2];
+		return xval > yval;
+	});
+	for (int i = 0; i < n; i++) cout << a[i][2] + 1 << ' ';
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	solve();
+}
