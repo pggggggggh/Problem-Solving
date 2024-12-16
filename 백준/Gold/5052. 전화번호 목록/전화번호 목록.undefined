@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+struct trieNode {
+	map<int, trieNode*> child;
+	bool isEnd = false;
+};
+
+void solve()
+{
+	int n;
+	cin >> n;
+	vector<string> a(n);
+	trieNode* root = new trieNode;
+	for (int i = 0; i < n; i++) {
+		cin >> a[i];
+		trieNode* cur = root;
+		for (int j = 0; j < a[i].size(); j++) {
+			int ord = a[i][j] - '0';
+			if (cur->child.find(ord) == cur->child.end()) {
+				trieNode* tmp = new trieNode;
+				cur->child[ord] = tmp;
+			}
+			cur = cur->child[ord];
+		}
+		cur->isEnd = true;
+	}
+	int res = 0;
+	function<void(trieNode*)> recur = [&](trieNode* cur) {
+		if (cur->isEnd && !cur->child.empty()) {
+			res = 1;
+		}
+		for (auto& v : cur->child) {
+			recur(v.second);
+		}
+	};
+	recur(root);
+	cout << (res ? "NO" : "YES") << '\n';
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	int t;
+	cin >> t;
+	while (t--) solve();
+}
