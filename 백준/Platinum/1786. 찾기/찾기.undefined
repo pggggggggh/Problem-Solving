@@ -1,0 +1,38 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+void solve()
+{
+	string s, t;
+	getline(cin, s);
+	getline(cin, t);
+	int n = s.size(), m = t.size();
+	vector<int> pi(m);
+	for (int i = 1, j = 0; i < m; i++) {
+		while (t[i] != t[j] && j > 0) j = pi[j - 1];
+		if (t[i] == t[j]) pi[i] = ++j;
+	}
+	vector<int> ans;
+	for (int i = 0, j = 0; i < n; i++) {
+		while (s[i] != t[j] && j > 0) j = pi[j - 1];
+		if (s[i] == t[j]) {
+			if (j == m - 1) {
+				ans.push_back(i - m + 2);
+				j = pi[j];
+			} else j++;
+		}
+	}
+	cout << ans.size() << '\n';
+	for (auto& x : ans) cout << x << ' ';
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	solve();
+}
