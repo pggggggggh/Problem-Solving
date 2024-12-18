@@ -1,0 +1,66 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+void solve()
+{
+	int n, m;
+	cin >> n >> m;
+	vector<array<int, 4>> E; // u, v, c, f
+	vector<vector<int>> adj(n + 1);
+	for (int i = 0; i < m; i++) {
+		int s, e;
+		cin >> s >> e;
+		adj[s].push_back(E.size());
+		E.push_back({ s, e, 1, 0 });
+		adj[e].push_back(E.size());
+		E.push_back({ e, s, 0, 0 });
+	}
+	vector<int> p(n + 1);
+	auto bfs = [&]() {
+		fill(all(p), -1);
+		queue<int> q;
+		q.push(1);
+		while (!q.empty()) {
+			int u = q.front();
+			q.pop();
+			for (auto& i : adj[u]) {
+				if (E[i][2] - E[i][3] > 0 && p[E[i][1]] == -1) {
+					q.push(E[i][1]);
+					p[E[i][1]] = i;
+				}
+			}
+		}
+		if (p[2] == -1) return false;
+		return true;
+	};
+	int res = 0;
+	while (bfs()) {
+		int u = 2;
+		int flow = 1e18;
+		while (u != 1) {
+			int i = p[u];
+			flow = min(flow, E[i][2] - E[i][3]);
+			u = E[i][0];
+		}
+		u = 2;
+		while (u != 1) {
+			int i = p[u];
+			E[i][3] += flow;
+			E[i ^ 1][3] -= flow;
+			u = E[i][0];
+		}
+		res += flow;
+	}
+	cout << res;
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	solve();
+}
