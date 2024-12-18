@@ -1,101 +1,102 @@
 #include <bits/stdc++.h>
-#define all(x) begin(x), end(x)
+#define MOD 1000000007
+#define INF 987654321LL
+#define ms(x,y) memset(x,y,sizeof(x))
+#define v(x) x.begin(),x.end()
+#define fi(x) for(i=0;i<x;i++)
+#define fii(x) for(int i=0;i<x;i++)
+#define fi1(x) for(i=1;i<=x;i++)
+#define fii1(x) for(int i=1;i<=x;i++)
+#define fj(x) for(j=0;j<x;j++)
+#define fj1(x) for(j=1;j<=x;j++)
+#define fk(x) for(k=0;k<x;k++)
+#define fk1(x) for(k=1;k<=x;k++)
+#define fastio() {ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);}
+#define pb push_back
+#define mp make_pair
+#define pq priority_queue
+#define X first
+#define Y second
+#define endl '\n'
+#define DEBUG 0
+#define pos(y,x) (y*m+x+1) // 1부터 시작
 #define int long long
+#define QQ cout<<"!";
+
 using namespace std;
-using pi = pair<int,int>;
+typedef pair<int, int> P;
 
-struct flow {
-    struct edge {
-        int from, to;
-        int c, f = 0;
-        int left() { return c - f; }
+struct Edge {
+    int to, c, f;
+    Edge* rev;
 
-        edge(int from, int to, int c) {
-            this->from = from;
-            this->to = to;
-            this->c = c;
-        }
-    };
-
-    int n, m, s, t;
-    vector<edge> E;
-    vector<vector<int> > g;
-    vector<int> level, see;
-
-    flow(int n) {
-        this->n = n;
-        m = 0;
-        g.resize(n);
-        level.resize(n);
-        see.resize(n);
+    Edge(int to_, int c_) {
+        to = to_;
+        c = c_;
+        f = 0;
+        rev = nullptr;
     }
 
-    void add_edge(int from, int to, int c) {
-        E.push_back({from, to, c});
-        E.push_back({to, from, 0});
-        g[from].push_back(m);
-        g[to].push_back(m + 1);
-        m += 2;
-    }
-
-    bool bfs() { // find level graph
-        fill(all(level), -1);
-        queue<int> q;
-        q.push(s);
-        level[s] = 0;
-        while (!q.empty()) {
-            int now = q.front();
-            q.pop();
-            for (int e: g[now]) {
-                int next = E[e].to;
-                if (E[e].left() > 0 && level[next] == -1) {
-                    level[next] = level[now] + 1;
-                    q.push(next);
-                }
-            }
-        }
-        return level[t] != -1;
-    }
-
-    int dfs(int now, int flow) { // flow along level graph
-        if (now == t) return flow;
-
-        for (int &i = see[now]; i < g[now].size(); i++) {
-            int e = g[now][i];
-            int next = E[e].to;
-            if (E[e].left() > 0 && level[next] == level[now] + 1) {
-                int f = dfs(next, min(E[e].left(), flow));
-                if (f > 0) {
-                    E[e].f += f;
-                    E[e ^ 1].f -= f;
-                    return f;
-                }
-            }
-        }
-        return 0; // no augmenting path
-    }
-
-    int maxflow(int s, int t) {
-        this->s = s;
-        this->t = t;
-
-        int res = 0;
-        while (bfs()) {
-            fill(all(see), 0);
-            while (int flow = dfs(s, 1e18)) res += flow;
-        }
-        return res;
+    int left() {
+        return c - f;
     }
 };
 
-signed main() {
-    int n, p;
-    cin >> n >> p;
-    flow graph(n + 1);
-    while (p--) {
-        int u, v;
-        cin >> u >> v;
-        graph.add_edge(u, v, 1);
+int n,p;
+vector<Edge*> adj[1000];
+int s,e;
+
+signed main()
+{
+    int i,j;
+
+    cin>>n>>p;
+    fi(p) {
+        int x,y;
+        cin>>x>>y;
+        Edge* e1 = new Edge(y, 1);
+        Edge* e2 = new Edge(x, 0);
+        e1->rev = e2;
+        e2->rev = e1;
+        adj[x].pb(e1);
+        adj[y].pb(e2); // adj는 무슨 일이 있어도 양쪽
     }
-    cout << graph.maxflow(1, 2);
+    s = 1;
+    e = 2;
+
+    int ans=0;
+    while (1) {
+        vector<Edge*> prev(n+1,nullptr); // i 올때 타고온 간선
+        queue<int> q;
+        q.push(s);
+        while (!q.empty() && !prev[e]) { // 싱크에 도달하면 종료
+            int now = q.front();
+            q.pop();
+
+            for (auto edge:adj[now]) {
+                int next = edge->to;
+                if (edge->left() > 0 && !prev[next]) { // 방문하지 않은 증가경로
+                    q.push(next);
+                    prev[next] = edge;
+                }
+            }
+        }
+        if (!prev[e]) break; // 증가경로 없음
+
+        int flow = INF;
+        int now = e;
+        while (now != s) {
+            flow = min(flow, prev[now]->left());
+            now = prev[now]->rev->to;
+        }
+
+        now = e;
+        while (now != s) {
+            prev[now]->f += flow;
+            prev[now]->rev->f -= flow;
+            now = prev[now]->rev->to;
+        }
+        ans += flow;
+    }
+    cout<<ans;
 }
