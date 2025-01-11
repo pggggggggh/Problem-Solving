@@ -1,0 +1,43 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define all1(x) begin(x) + 1, end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+int dp[5005][5005][2];
+
+void solve()
+{
+	int n, k;
+	cin >> n >> k;
+	vector<int> a(n + 1);
+	for (int i = 1; i <= n; i++) cin >> a[i];
+	memset(dp, -1, sizeof(dp));
+	function<int(int, int, int)> recur = [&](int now, int made, int state) {
+		int& ret = dp[now][made][state];
+		if (ret != -1) return ret;
+		if (now == n + 1) {
+			if (state == 1) made++;
+			if (made == k) return ret = 0;
+			return ret = -1e18;
+		}
+		ret = -1e18;
+		if (made < k && state == 1) ret = max(ret, recur(now + 1, made + 1, 0));
+		if (made < k && state == 1) ret = max(ret, a[now] + recur(now + 1, made + 1, 1));
+		if (state == 0) ret = max(ret, recur(now + 1, made, 0));
+		ret = max(ret, a[now] + recur(now + 1, made, 1));
+
+		// cout << now << ' ' << made << ' ' << state << ':' << ret << '\n';
+		return ret;
+	};
+	cout << recur(1, 0, 0) << '\n';
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	solve();
+}
