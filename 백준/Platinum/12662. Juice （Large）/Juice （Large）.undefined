@@ -1,0 +1,46 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define all1(x) begin(x) + 1, end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+int ar[10005];
+
+void solve()
+{
+	int n;
+	cin >> n;
+	vector<array<int, 3>> a(n + 1);
+	for (int i = 1; i <= n; i++) cin >> a[i][0] >> a[i][1] >> a[i][2];
+	sort(all1(a));
+	int ans = 0;
+	for (int i = 1; i <= n; i++) {
+		memset(ar, 0, sizeof(ar));
+		int full = 10000 - a[i][0];
+		for (int j = 1; j <= i; j++) {
+			if (a[j][1] + a[j][2] > full) continue;
+			ar[a[j][1]] += 1;
+			ar[full - a[j][2] + 1] += -1;
+		}
+		int cur = 0;
+		for (int j = 0; j <= 10000; j++) {
+			cur += ar[j];
+			ans = max(ans, cur);
+		}
+	}
+	cout << ans << '\n';
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	int t;
+	cin >> t;
+	for (int i = 1; i <= t; i++) {
+		cout << "Case #" << i << ": ";
+		solve();
+	}
+}
