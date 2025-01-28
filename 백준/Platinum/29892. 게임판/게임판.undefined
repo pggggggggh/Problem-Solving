@@ -29,6 +29,7 @@ void solve()
 			if (o == 1) now.insert({ x, y, num });
 			else now.erase({ x, y, num });
 		}
+		if (i < k || i > n - k + 1) continue;
 		vector<vector<int>> aevent(3, vector<int>(m + 2)), bevent(3, vector<int>(m + 2));
 		for (auto& [x, y, num] : now) {
 			int s = max(y - k + 1, 1LL), e = min(y + k, m + 1);
@@ -45,7 +46,7 @@ void solve()
 			a1 += aevent[1][j], a2 += aevent[2][j];
 			b1 += bevent[1][j], b2 += bevent[2][j];
 			aans = a1 * j + b1, bans = a2 * j + b2;
-			if (i >= k && i <= n - k + 1 && j >= k && j <= m - k + 1) {
+			if (j >= k && j <= m - k + 1) {
 				ans = min(ans, abs(aans - bans));
 			}
 		}
