@@ -1,0 +1,72 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define all1(x) begin(x) + 1, end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+void solve()
+{
+	int n;
+	char b;
+	string s;
+	cin >> n >> b >> s;
+	int shield = 0, bomb = 0;
+	vector<char> others;
+	for (int i = 0; i < n; i++) {
+		if (s[i] == b) bomb++;
+		else if (s[i] == tolower(b)) shield++;
+		else others.push_back(s[i]);
+	}
+	if (shield == 0) {
+		sort(all(others));
+		string ans = "";
+		for (auto& c : others) ans += c;
+		string bombs = "";
+		for (int i = 0; i < bomb; i++) bombs += b;
+		cout << min(bombs + ans, ans + bombs);
+		return;
+	}
+
+	string ans1 = "", ans2 = "", ans3 = "";
+	vector<char> others2 = others;
+	for (int i = 0; i < shield - 1; i++) others2.push_back(tolower(b));
+	sort(all(others2));
+
+	for (int i = 0; i < bomb; i++) ans1 += b;
+	ans1 += tolower(b);
+	for (auto& x : others2) {
+		ans1 += x;
+		ans2 += x;
+	}
+	ans2 += tolower(b);
+	for (int i = 0; i < bomb; i++) ans2 += b;
+
+	if (shield == 1) {
+		cout << min(ans1, ans2);
+		return;
+	}
+
+	vector<string> others3;
+	for (auto& c : others) others3.push_back(string() + c);
+	for (int i = 0; i < shield - 2; i++) others3.push_back(string() + (char)tolower(b));
+	string tmp = "";
+	tmp += tolower(b);
+	for (int i = 0; i < bomb; i++) tmp += b;
+	tmp += tolower(b);
+	others3.push_back(tmp);
+	sort(all(others3), [&](string x, string y) {
+		return x + y < y + x;
+	});
+	for (auto& s : others3) ans3 += s;
+
+	cout << min({ ans1, ans2, ans3 });
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	solve();
+}
