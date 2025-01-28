@@ -1,0 +1,67 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define all1(x) begin(x) + 1, end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+const int MOD = 1e9 + 7;
+int fact[1000005];
+
+int modexp(int x, int y)
+{
+	int res = 1;
+	while (y) {
+		if (y & 1) res = (res * x) % MOD;
+		x = (x * x) % MOD;
+		y >>= 1;
+	}
+	return res;
+}
+
+inline int comb(int n, int r)
+{
+	return fact[n] * modexp(fact[n - r], MOD - 2) % MOD * modexp(fact[r], MOD - 2) % MOD;
+}
+
+void solve()
+{
+	int n, g, l;
+	cin >> n >> g >> l;
+	if (l % g) {
+		cout << "0\n";
+		return;
+	}
+	l /= g;
+	vector<int> gyesu;
+	int tmp = l;
+	for (int i = 2; i * i <= l; i++) {
+		int cnt = 0;
+		while (tmp % i == 0) {
+			tmp /= i;
+			cnt++;
+		}
+		if (cnt) gyesu.push_back(cnt);
+	}
+	if (tmp != 1) gyesu.push_back(1);
+
+	int res = 1;
+	for (auto& x : gyesu) {
+		int now = (modexp(x + 1, n) - 2 * modexp(x, n) + modexp(x - 1, n) + 2 * MOD) % MOD;
+		res = res * now % MOD;
+	}
+	cout << res << '\n';
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	fact[0] = 1;
+	for (int i = 1; i <= 1000000; i++) fact[i] = fact[i - 1] * i % MOD;
+
+	int t;
+	cin >> t;
+	while (t--) solve();
+}
