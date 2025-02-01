@@ -1,0 +1,53 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define all1(x) begin(x) + 1, end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+static vector<int> z_func(const string& s)
+{
+	vector<int> z(s.size());
+	z[0] = s.size();
+	int l = 0, r = 0; // [l,r)
+	for (int i = 1; i < s.size(); i++) {
+		if (i < r) z[i] = min(r - i, z[i - l]);
+		while (i + z[i] < s.size() && s[z[i]] == s[i + z[i]]) {
+			z[i]++;
+		}
+		if (i + z[i] > r) {
+			l = i;
+			r = i + z[i];
+		}
+	}
+	return z;
+}
+
+void solve()
+{
+	int n, k;
+	string s;
+	cin >> n >> k >> s;
+	if (k >= n) {
+		cout << n;
+		return;
+	}
+	vector<int> z = z_func(s);
+	z.push_back(0);
+	int ans = 0;
+	for (int i = 1; i < n; i++) {
+		if (i + z[i] == n) {
+			int tmp = ((n + i - 1) / i) * i;
+			if (tmp - n <= k) ans = max(ans, i);
+		}
+	}
+	cout << ans;
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	solve();
+}
