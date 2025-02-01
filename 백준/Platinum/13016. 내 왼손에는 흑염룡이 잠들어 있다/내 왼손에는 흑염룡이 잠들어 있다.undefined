@@ -1,0 +1,43 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define all1(x) begin(x) + 1, end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+void solve()
+{
+	int n;
+	cin >> n;
+	vector<vector<pi>> adj(n + 1);
+	for (int i = 1; i < n; i++) {
+		int s, e, x;
+		cin >> s >> e >> x;
+		adj[s].emplace_back(e, x);
+		adj[e].emplace_back(s, x);
+	}
+	function<void(int, int, vector<int>&)> dfs = [&](int u, int p, vector<int>& dist) {
+		for (auto& [v, c] : adj[u]) {
+			if (v == p) continue;
+			dist[v] = dist[u] + c;
+			dfs(v, u, dist);
+		}
+	};
+	vector<int> dist(n + 1), dista(n + 1), distb(n + 1);
+	dfs(1, -1, dist);
+	int a = max_element(all1(dist)) - dist.begin();
+	dfs(a, -1, dista);
+	int b = max_element(all1(dista)) - dista.begin();
+	dfs(b, -1, distb);
+	for (int i = 1; i <= n; i++) {
+		cout << max(dista[i], distb[i]) << '\n';
+	}
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	solve();
+}
