@@ -8,3 +8,4 @@ with recursive recur as (
 select count(*) as count,gen as generation from ecoli_data as a join recur as b on a.id=b.id
 where a.id not in (select coalesce(parent_id,"") from ecoli_data)
 group by gen
+order by gen
