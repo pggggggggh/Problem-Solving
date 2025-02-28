@@ -1,0 +1,61 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+void solve()
+{
+	int n, a, b, c, d;
+	cin >> n >> a >> b >> c >> d;
+	vector<pi> ar(n + 1);
+	for (int i = 1; i <= n; i++) cin >> ar[i].first >> ar[i].second;
+	auto fx = [&](int x) {
+		int ret = 0;
+		for (int i = 1; i <= n; i++) {
+			if (ar[i].first > x) ret += (ar[i].first - x) * a;
+			else ret += (x - ar[i].first) * b;
+		}
+		return ret;
+	};
+	int lo = -1e7, hi = 1e7;
+	while (lo + 5 < hi) {
+		int p = (2 * lo + hi) / 3;
+		int q = (lo + 2 * hi) / 3;
+		if (fx(p) < fx(q)) hi = q;
+		else lo = p;
+	}
+	int mnx = lo;
+	for (int i = lo + 1; i <= hi; i++) {
+		if (fx(i) < fx(mnx)) mnx = i;
+	}
+
+	auto fy = [&](int y) {
+		int ret = 0;
+		for (int i = 1; i <= n; i++) {
+			if (ar[i].second > y) ret += (ar[i].second - y) * c;
+			else ret += (y - ar[i].second) * d;
+		}
+		return ret;
+	};
+	lo = -1e7, hi = 1e7;
+	while (lo + 5 < hi) {
+		int p = (2 * lo + hi) / 3;
+		int q = (lo + 2 * hi) / 3;
+		if (fy(p) < fy(q)) hi = q;
+		else lo = p;
+	}
+	int mny = lo;
+	for (int i = lo + 1; i <= hi; i++) {
+		if (fy(i) < fy(mny)) mny = i;
+	}
+	cout << fx(mnx) + fy(mny);
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	solve();
+}
