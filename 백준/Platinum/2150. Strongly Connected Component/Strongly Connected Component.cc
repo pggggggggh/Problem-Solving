@@ -25,7 +25,7 @@ void solve()
 		low[u] = dfn;
 		for (auto& v : adj[u]) {
 			if (!low[v]) low[u] = min(low[u], dfs(v));
-			else if (!fin[v]) low[u] = min(low[u], low[v]);
+			else if (!fin[v]) low[u] = min(low[u], id[v]);
 		}
 		if (low[u] == id[u]) {
 			vector<int> scc;
