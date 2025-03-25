@@ -1,42 +1,51 @@
 #include <bits/stdc++.h>
 #define all(x) begin(x), end(x)
+#define all1(x) begin(x) + 1, end(x)
 #define int long long
 using namespace std;
-using pi = pair<int,int>;
+using pi = pair<int, int>;
 
-struct suffix_array {
-    vector<int> sa, lcp;
+void solve()
+{
+	string s;
+	cin >> s;
+	int n = s.size();
 
-    suffix_array(string &s, int lim = 256) {
-        int n = s.size() + 1, k = 0, a, b;
-        vector<int> x(n), y(n), ws(max(n, lim)), rank(n);
-        for (int i = 0; i < n; i++) x[i] = s[i];
-        sa = lcp = y, iota(all(sa), 0);
-        for (int j = 0, p = 0; p < n; j = max(1LL, j * 2), lim = p) {
-            p = j, iota(all(y), n - j);
-            for (int i = 0; i < n; i++) if (sa[i] >= j) y[p++] = sa[i] - j;
-            fill(all(ws), 0);
-            for (int i = 0; i < n; i++) ws[x[i]]++;
-            for (int i = 1; i < lim; i++) ws[i] += ws[i - 1];
-            for (int i = n; i--;) sa[--ws[x[y[i]]]] = y[i];
-            swap(x, y), p = 1, x[sa[0]] = 0;
-            for (int i = 1; i < n; i++)
-                a = sa[i - 1], b = sa[i], x[b] =
-                        (y[a] == y[b] && y[a + j] == y[b + j]) ? p - 1 : p++;
-        }
-        for (int i = 1; i < n; i++) rank[sa[i]] = i;
-        for (int i = 0, j; i < n - 1; lcp[rank[i++]] = k)
-            for (k && k--, j = sa[rank[i] - 1];
-                 s[i + k] == s[j + k]; k++);
-    }
-};
+	vector<int> sa(n), pos(n);
+	for (int i = 0; i < n; i++) {
+		sa[i] = i;
+		pos[i] = s[i];
+	}
+	int d;
+	auto cmp = [&](int i, int j) {
+		if (pos[i] != pos[j]) return pos[i] < pos[j];
+		i += d, j += d;
+		return (i < n && j < n) ? (pos[i] < pos[j]) : (i > j);
+	};
+	for (d = 1;; d *= 2) {
+		sort(all(sa), cmp);
+		vector<int> tmp = { 0 };
+		for (int i = 0; i < n - 1; i++) tmp.push_back(tmp.back() + cmp(sa[i], sa[i + 1]));
+		for (int i = 0; i < n; i++) pos[sa[i]] = tmp[i];
+		if (tmp.back() == n - 1) break;
+	}
+	for (int i = 0; i < n; i++) cout << sa[i] + 1 << ' ';
+	cout << '\n';
 
-signed main() {
-    string s;
-    cin >> s;
-    suffix_array sa(s);
-    for (int i = 1; i < s.size() + 1; i++) cout << sa.sa[i] + 1 << ' ';
-    cout << '\n';
-    cout << "x ";
-    for (int i = 2; i < s.size() + 1; i++) cout << sa.lcp[i] << ' ';
+	vector<int> lcp(n);
+	for (int i = 0, k = 0; i < n; i++, k = max(k - 1, 0LL)) {
+		if (pos[i] == n - 1) continue;
+		while (s[i + k] == s[sa[pos[i] + 1] + k]) k++;
+		lcp[pos[i]] = k;
+	}
+	cout << "x ";
+	for (int i = 0; i < n - 1; i++) cout << lcp[i] << ' ';
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	solve();
 }
