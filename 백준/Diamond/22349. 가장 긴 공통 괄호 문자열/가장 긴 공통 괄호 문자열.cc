@@ -2,7 +2,6 @@
 #define all(x) begin(x), end(x)
 #define all1(x) begin(x) + 1, end(x)
 #define int long long
-#define int128 __int128_t
 using namespace std;
 using pi = pair<int, int>;
 
@@ -23,7 +22,7 @@ struct minseg {
 		x += sz, y += sz;
 		while (x <= y) {
 			if (x & 1) res = min(res, seg[x++]);
-			if (!(y & 1)) res = min(res, seg[y--]);
+			if (~(y & 1)) res = min(res, seg[y--]);
 			x >>= 1, y >>= 1;
 		}
 		return res;
@@ -41,148 +40,77 @@ struct minseg {
 	}
 };
 
-const int sz = 10;
-const vector<int> MOD = {
-	100000000003LL,
-	100000000019LL,
-	100000000057LL,
-	100000000063LL,
-	100000000069LL,
-	100000000099LL,
-	100000000103LL,
-	100000000129LL,
-	100000000163LL,
-	100000000169LL,
-	100000000193LL,
-	100000000223LL,
-	100000000237LL,
-	100000000253LL,
-	100000000267LL,
-	100000000279LL,
-	100000000319LL,
-	100000000323LL,
-	100000000379LL,
-	100000000399LL,
-	100000000403LL,
-	100000000429LL,
-	100000000471LL,
-	100000000503LL,
-	100000000517LL,
-	100000000529LL,
-	100000000553LL,
-	100000000577LL,
-	100000000583LL,
-	100000000607LL,
-};
-
-int modexp(int128 x, int128 y, int128 m)
-{
-	int128 res = 1;
-	while (y) {
-		if (y % 2) res = res * x % m;
-		x = x * x % m;
-		y >>= 1;
-	}
-	return res;
-}
-
 void solve()
 {
 	string s, t;
 	cin >> s >> t;
 	int n = s.size(), m = t.size();
-	s = '$' + s, t = '$' + t;
-	minseg psum(n + 1), psumb(m + 1);
+	minseg psum(n + 2); // 1 based
+	vector<set<int>> psumpos(2 * n + 1);
 	int cur = 0;
 	psum.update(0, 0);
-	for (int i = 1; i <= n; i++) {
+	for (int i = 0; i < n; i++) {
 		if (s[i] == '(') cur++;
 		else cur--;
-		psum.update(i, cur);
+		psum.update(i + 1, cur);
+		psumpos[cur + n].insert(i);
 	}
-	cur = 0;
-	psumb.update(0, 0);
-	for (int i = 1; i <= m; i++) {
-		if (t[i] == '(') cur++;
-		else cur--;
-		psumb.update(i, cur);
+	psum.update(n + 1, -1e18);
+
+	string a = s + '$' + t;
+	int l = n + m + 1;
+	vector<int> pos(l), sa(l);
+	vector<int> lcps(l);
+	for (int i = 0; i < l; i++) {
+		sa[i] = i;
+		pos[i] = a[i];
 	}
-	int lo = 0, hi = min(n, m) / 2 + 1;
-	while (lo + 1 < hi) {
-		int mid = lo + hi >> 1;
-		int len = mid * 2;
-		array<int, sz> cur = { 0, 0, 0, 0 };
-		vector<array<int, sz>> ar;
-		for (int i = 1; i <= len; i++) {
-			if (s[i] == '(') {
-				for (int k = 0; k < sz; k++) {
-					cur[k] = (cur[k] + modexp(2, len - i, MOD[k])) % MOD[k];
-				}
-			}
-		}
-		if (psum.query(len, len) == psum.query(0, 0) && psum.query(0, len) >= psum.query(0, 0)) {
-			ar.push_back(cur);
-		}
-		for (int i = len + 1; i <= n; i++) {
-			if (s[i - len] == '(') {
-				for (int k = 0; k < sz; k++) {
-					cur[k] = (cur[k] - modexp(2, len - 1, MOD[k]) + MOD[k]) % MOD[k];
-				}
-			}
-			for (int k = 0; k < sz; k++) cur[k] = cur[k] * 2 % MOD[k];
-			if (s[i] == '(') {
-				for (int k = 0; k < sz; k++) cur[k] = (cur[k] + 1) % MOD[k];
-			}
-			if (psum.query(i, i) == psum.query(i - len, i - len) && psum.query(i - len, i) >= psum.query(i - len, i - len)) {
-				ar.push_back(cur);
-			}
-		}
-		sort(all(ar));
-		ar.erase(unique(all(ar)), ar.end());
-		cur = { 0, 0, 0, 0 };
-
-		for (int i = 1; i <= len; i++) {
-			if (t[i] == '(') {
-				for (int k = 0; k < sz; k++) {
-					cur[k] = (cur[k] + modexp(2, len - i, MOD[k])) % MOD[k];
-				}
-			}
-		}
-
-		int good = 0;
-		auto it = lower_bound(all(ar), cur);
-		if (it != ar.end()) {
-			if (*it == cur) {
-				good = 1;
-			}
-		}
-
-		for (int i = len + 1; i <= m; i++) {
-			if (good) break;
-			if (t[i - len] == '(') {
-				for (int k = 0; k < sz; k++) {
-					cur[k] = (cur[k] - modexp(2, len - 1, MOD[k]) + MOD[k]) % MOD[k];
-				}
-			}
-			for (int k = 0; k < sz; k++) cur[k] = cur[k] * 2 % MOD[k];
-			if (t[i] == '(') {
-				for (int k = 0; k < sz; k++) cur[k] = (cur[k] + 1) % MOD[k];
-			}
-			if (psumb.query(i, i) == psumb.query(i - len, i - len) && psumb.query(i - len, i) >= psumb.query(i - len, i - len)) {
-				auto it = lower_bound(all(ar), cur);
-				if (it != ar.end()) {
-					if (*lower_bound(all(ar), cur) == cur) {
-						good = 1;
-					}
-				}
-			}
-		}
-		if (good) {
-			// cout << mid << "good\n";
-			lo = mid;
-		} else hi = mid;
+	int d = 1;
+	auto cmp = [&](int i, int j) {
+		if (pos[i] != pos[j]) return pos[i] < pos[j];
+		i += d, j += d;
+		if (i >= l || j >= l) return i > j;
+		return pos[i] < pos[j];
+	};
+	while (1) {
+		sort(all(sa), cmp);
+		vector<int> tmp(l);
+		for (int i = 1; i < l; i++) tmp[i] = tmp[i - 1] + cmp(sa[i - 1], sa[i]);
+		for (int i = 0; i < l; i++) pos[sa[i]] = tmp[i];
+		if (tmp[l - 1] == l - 1) break;
+		d *= 2;
 	}
-	cout << lo * 2 << '\n';
+	int ans = 0;
+	int k = 0;
+	for (int i = 0; i < l - 1; i++, k = max(k - 1, 0LL)) {
+		if (pos[i] == l - 1) continue;
+		int x = i, y = sa[pos[i] + 1];
+		if (x == n || y == n) continue;
+		while (a[x + k] == a[y + k]) k++;
+		if (x > y) swap(x, y);
+		if (k == 0) continue;
+		if (a[x] == ')') continue;
+		if ((x < n) ^ (y < n)) {
+			// for (int j = x; j < l; j++) cout << a[j];
+			// cout << ' ';
+			// for (int j = y; j < l; j++) cout << a[j];
+			// cout << ':' << k << '\n';
+			int lo = x, hi = n;
+			int lb = psum.query(x, x); // x-1+1
+			while (lo + 1 < hi) {
+				int mid = lo + hi >> 1;
+				if (psum.query(x + 1, mid + 1) >= lb) lo = mid;
+				else hi = mid;
+			}
+			int ub = min(x + k - 1, lo);
+			auto it = psumpos[lb + n].upper_bound(ub);
+			if (it != psumpos[lb + n].begin()) {
+				ans = max(ans, (*prev(it)) - x + 1);
+				// cout << x << ' ' << (*(prev(it))) << '\n';
+			}
+		}
+	}
+	cout << ans << '\n';
 }
 
 signed main()
