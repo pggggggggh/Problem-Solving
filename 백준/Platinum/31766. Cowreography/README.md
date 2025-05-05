@@ -1,10 +1,10 @@
-# [Platinum III] Cowreography - 31766 
+# [Platinum II] Cowreography - 31766 
 
 [문제 링크](https://www.acmicpc.net/problem/31766) 
 
 ### 성능 요약
 
-메모리: 138216 KB, 시간: 248 ms
+메모리: 6792 KB, 시간: 72 ms
 
 ### 분류
 
@@ -12,7 +12,7 @@
 
 ### 제출 일자
 
-2025년 5월 5일 19:41:58
+2025년 5월 5일 21:16:04
 
 ### 문제 설명
 
