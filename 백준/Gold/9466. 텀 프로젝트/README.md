@@ -4,21 +4,23 @@
 
 ### 성능 요약
 
-메모리: 11880 KB, 시간: 604 ms
+메모리: 303284 KB, 시간: 1052 ms
 
 ### 분류
 
-깊이 우선 탐색, 그래프 이론, 그래프 탐색
+그래프 이론, 그래프 탐색, 깊이 우선 탐색
 
 ### 제출 일자
 
-2025년 3월 5일 00:21:08
+2025년 5월 28일 20:11:41
 
 ### 문제 설명
 
-<p>Students who enrolled in the ‘Problem Solving’ course in this fall semester have to carry out a term project. There is no limit to the number of project team members. Even one team is allowed such that all students are members of the same team. In order to form project teams, every student should select a friend with whom he or she wants to work. A student who wants to work alone can select himself or herself. A student list (s<sub>1</sub>, s<sub>2</sub>, ..., s<sub>r</sub>) can be a team if either r=1 and s<sub>1</sub> selects s<sub>1</sub> or s<sub>1</sub> selects s<sub>2</sub>, s<sub>2</sub> selects s<sub>3</sub>, … , s<sub>r-1</sub> selects s<sub>r</sub>, and s<sub>r</sub> selects s<sub>1</sub>.</p>
+<p>이번 가을학기에 '문제 해결' 강의를 신청한 학생들은 텀 프로젝트를 수행해야 한다. 프로젝트 팀원 수에는 제한이 없다. 심지어 모든 학생들이 동일한 팀의 팀원인 경우와 같이 한 팀만 있을 수도 있다. 프로젝트 팀을 구성하기 위해, 모든 학생들은 프로젝트를 함께하고 싶은 학생을 선택해야 한다. (단, 단 한 명만 선택할 수 있다.) 혼자 하고 싶어하는 학생은 자기 자신을 선택하는 것도 가능하다.</p>
 
-<p>For example, let’s assume that there are 7 students in the class. The students are numbered from 1 to 7. The following is the result of the selection.</p>
+<p>학생들이(s<sub>1</sub>, s<sub>2</sub>, ..., s<sub>r</sub>)이라 할 때, r=1이고 s<sub>1</sub>이 s<sub>1</sub>을 선택하는 경우나, s<sub>1</sub>이 s<sub>2</sub>를 선택하고, s<sub>2</sub>가 s<sub>3</sub>를 선택하고,..., s<sub>r-1</sub>이 s<sub>r</sub>을 선택하고, s<sub>r</sub>이 s<sub>1</sub>을 선택하는 경우에만 한 팀이 될 수 있다.</p>
+
+<p>예를 들어, 한 반에 7명의 학생이 있다고 하자. 학생들을 1번부터 7번으로 표현할 때, 선택의 결과는 다음과 같다.</p>
 
 <table class="table table-bordered" style="width:30%">
 	<thead>
@@ -45,15 +47,15 @@
 	</tbody>
 </table>
 
-<p>From the above result, we can see that two teams (3) and (4, 7, 6) are formed. Students 1, 2, and 5 don’t belong to any team.</p>
+<p>위의 결과를 통해 (3)과 (4, 7, 6)이 팀을 이룰 수 있다. 1, 2, 5는 어느 팀에도 속하지 않는다.</p>
 
-<p>Given the result of the selection, write a program to compute the number of students who don’t belong to a project team. </p>
+<p>주어진 선택의 결과를 보고 어느 프로젝트 팀에도 속하지 않는 학생들의 수를 계산하는 프로그램을 작성하라.</p>
 
 ### 입력 
 
- <p>Your program is to read from standard input. The input consists of T test cases. The number of test cases T is given in the first line of the input. Each test case starts with a line containing an integer n (2 ≤ n ≤ 100 000), where n is the number of students in the class. All students are numbered from 1 to n. The next line of each test case contains n integers s<sub>1</sub>, s<sub>2</sub>, ..., s<sub>n</sub>, where s<sub>i</sub> is the student who was a student ݅ selected by. </p>
+ <p>첫째 줄에 테스트 케이스의 개수 T가 주어진다. 각 테스트 케이스의 첫 줄에는 학생의 수가 정수 n (2 ≤ n ≤ 100,000)으로 주어진다. 각 테스트 케이스의 둘째 줄에는 선택된 학생들의 번호가 주어진다. (모든 학생들은 1부터 n까지 번호가 부여된다.)</p>
 
 ### 출력 
 
- <p>Your program is to write to standard output. Print exactly one line for each test case. The line should contain the number of students who don’t belong to a project team. </p>
+ <p>각 테스트 케이스마다 한 줄에 출력하고, 각 줄에는 프로젝트 팀에 속하지 못한 학생들의 수를 나타내면 된다.</p>
 
