@@ -182,8 +182,9 @@ void solve()
 		ans += sex.first;
 		int cur = in_to_node[sex.second];
 
-		while (gab[cur] != 0) {
-			ett.update(in[cur], out[cur], -gab[cur], 1, 0, ett.sz - 1);
+		while (waters[cur] != 0) {
+			// cout << cur << ':' << in[cur] << ' ' << out[cur] << ' ' << waters[cur] << '\n';
+			ett.update(in[cur], out[cur], -waters[cur], 1, 0, ett.sz - 1);
 			gab[cur] = 0;
 			cur = p[cur];
 		}
