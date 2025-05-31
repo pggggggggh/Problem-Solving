@@ -75,8 +75,8 @@ struct lazyseg {
 
 	void update(int x, int y, int val, int node, int l, int r)
 	{
-		if (r < x || y < l) return;
 		propa(node, l, r);
+		if (r < x || y < l) return;
 		if (x <= l && r <= y) {
 			lazy[node] += val;
 			propa(node, l, r);
@@ -90,8 +90,8 @@ struct lazyseg {
 
 	pi query(int x, int y, int node, int l, int r)
 	{
-		if (r < x || y < l) return e;
 		propa(node, l, r);
+		if (r < x || y < l) return e;
 		if (x <= l && r <= y) return seg[node];
 		int mid = l + r >> 1;
 		return op(query(x, y, node * 2, l, mid), query(x, y, node * 2 + 1, mid + 1, r));
@@ -183,11 +183,13 @@ void solve()
 		int cur = in_to_node[sex.second];
 
 		while (waters[cur] != 0) {
-			// cout << cur << ':' << in[cur] << ' ' << out[cur] << ' ' << waters[cur] << '\n';
 			ett.update(in[cur], out[cur], -waters[cur], 1, 0, ett.sz - 1);
-			gab[cur] = 0;
+			waters[cur] = 0;
 			cur = p[cur];
 		}
+
+		// for (int i = 1; i <= nodes; i++) cout << ett.query(in[i], in[i], 1, 0, ett.sz - 1).first << ' ';
+		// cout << '\n';
 	}
 
 	cout << ans;
