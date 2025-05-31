@@ -46,7 +46,7 @@ void solve()
 	cin >> n;
 	map<int, set<pi>> mp;
 	vector<pi> a(n);
-	segtree seg(5000005);
+	segtree seg(500005);
 	for (int i = 0; i < n; i++) cin >> a[i].first >> a[i].second;
 	for (int i = 1; i < n; i += 2) {
 		mp[a[i].second].insert({ a[i].first, a[i + 1].first });
