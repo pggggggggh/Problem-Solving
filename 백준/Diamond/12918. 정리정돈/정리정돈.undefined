@@ -1,0 +1,142 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define all1(x) begin(x) + 1, end(x)
+#define int long long
+#define X first
+#define Y second
+using namespace std;
+using pd = pair<double, double>;
+
+struct mcmf {
+	struct edge {
+		int s, e, cap, flow;
+		double cost;
+
+		edge(int s, int e, int cap, double cost, int flow)
+		    : s(s), e(e), cap(cap), cost(cost), flow(flow) { }
+	};
+	int n, m = 0;
+	int s, t;
+	vector<edge> edges;
+	vector<vector<int>> adj;
+	vector<int> from;
+
+	mcmf(int n, int s, int t)
+	    : n(n), s(s), t(t)
+	{
+		adj.resize(n);
+		from.resize(n);
+	}
+
+	void add_edge(int s, int e, int cap, double cost)
+	{
+		edges.push_back({ s, e, cap, cost, 0 });
+		adj[s].push_back(m);
+		edges.push_back({ e, s, 0, -cost, 0 });
+		adj[e].push_back(m + 1);
+		m += 2;
+	}
+
+	bool spfa()
+	{
+		vector<double> dist(n, 1e18);
+		vector<bool> inq(n, false);
+		queue<int> q;
+
+		fill(from.begin(), from.end(), -1);
+		dist[s] = 0;
+		q.push(s);
+		inq[s] = true;
+
+		while (!q.empty()) {
+			int u = q.front();
+			q.pop();
+			inq[u] = false;
+			for (int idx : adj[u]) {
+				auto& e = edges[idx];
+				if (e.cap - e.flow > 0 && dist[u] + e.cost < dist[e.e]) {
+					dist[e.e] = dist[u] + e.cost;
+					from[e.e] = idx;
+					if (!inq[e.e]) {
+						q.push(e.e);
+						inq[e.e] = true;
+					}
+				}
+			}
+		}
+		return dist[t] < 1e18;
+	}
+
+	double get_mcmf()
+	{
+		int res_flow = 0;
+		double res = 0;
+		while (spfa()) {
+			int cur = from[t];
+			int cur_flow = 1e18;
+			while (1) {
+				edge& e = edges[cur];
+				cur_flow = min(cur_flow, e.cap - e.flow);
+				cur = from[e.s];
+				if (cur == -1) break;
+			}
+			cur = from[t];
+			while (1) {
+				edge& e = edges[cur];
+				res += (double)cur_flow * e.cost;
+				edges[cur].flow += cur_flow;
+				edges[cur ^ 1].flow -= cur_flow;
+				cur = from[e.s];
+				if (cur == -1) break;
+			}
+			res_flow += cur_flow;
+		}
+		return res;
+	}
+};
+
+double dist(pd a, pd b)
+{
+	return hypot(-a.X - b.X, a.Y - b.Y);
+}
+
+void solve()
+{
+	int n;
+	cin >> n;
+	vector<pd> a, b;
+	mcmf flow(n + 2, 0, n + 1);
+	double ans = 0;
+	for (int i = 0; i < n; i++) {
+		double x, y;
+		cin >> x >> y;
+		if (x < 0) {
+			a.push_back({ x, y });
+		} else {
+			b.push_back({ x, y });
+		}
+		ans += abs(x);
+	}
+	int as = a.size(), bs = b.size();
+	for (int i = 0; i < as; i++) {
+		flow.add_edge(0, i + 1, 1, 0);
+		flow.add_edge(i + 1, n + 1, 1, 0);
+	}
+	for (int i = 0; i < bs; i++) flow.add_edge(as + i + 1, n + 1, 1, 0);
+
+	for (int i = 0; i < as; i++) {
+		for (int j = 0; j < bs; j++) {
+			double sex = dist(a[i], b[j]) - abs(a[i].first) - abs(b[j].first);
+			if (sex < 0) flow.add_edge(i + 1, as + j + 1, 1, sex);
+		}
+	}
+	cout << fixed << setprecision(3) << ans + flow.get_mcmf();
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	solve();
+}
