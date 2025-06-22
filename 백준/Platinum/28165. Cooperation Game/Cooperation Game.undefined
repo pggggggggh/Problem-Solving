@@ -123,7 +123,7 @@ void solve()
 		}
 	}
 	sort(all(cha), [&](pi& x, pi& y) {
-		if (x.second - x.first == y.second - y.first) return x.first > y.first;
+		// if (x.second - x.first == y.second - y.first) return x.first > y.first;
 		return x.second - x.first > y.second - y.first;
 	});
 	int ans = 0;
