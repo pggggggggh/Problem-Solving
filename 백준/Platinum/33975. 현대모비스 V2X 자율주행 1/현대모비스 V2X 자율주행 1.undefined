@@ -1,0 +1,40 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define all1(x) begin(x) + 1, end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+void solve()
+{
+	int n;
+	cin >> n;
+	n *= 2;
+	string a, b;
+	cin >> a >> b;
+
+	auto sox = [&](string a, string b) {
+		vector<int> ar(n);
+		int acur = 0, bcur = 0;
+		for (int i = 0; i < n; i++) {
+			if (a[i] == 'R') acur++;
+			if (b[i] == 'R') bcur++;
+			ar[i] = acur - bcur;
+		}
+		int ans = 0;
+		for (int i = 0; i < n - 1; i++) {
+			if (ar[i] <= 0) ans += -ar[i] + 1;
+		}
+		return ans;
+	};
+
+	cout << min(sox(a, b), sox(b, a));
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	solve();
+}
