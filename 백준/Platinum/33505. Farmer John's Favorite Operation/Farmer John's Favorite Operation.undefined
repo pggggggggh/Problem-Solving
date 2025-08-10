@@ -1,0 +1,43 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define all1(x) begin(x) + 1, end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+void solve()
+{
+	int n, m;
+	cin >> n >> m;
+	vector<int> a(n);
+	for (int i = 0; i < n; i++) {
+		cin >> a[i];
+		a[i] %= m;
+	}
+	for (int i = 0; i < n; i++) a.push_back(a[i] + m);
+	sort(all(a));
+	int cur = 0;
+	for (int i = 0; i < n; i++) {
+		cur += abs(a[i] - a[n / 2]);
+	}
+	int ans = cur;
+	for (int i = 1; i < n; i++) { // [i,i+n) 취함
+		cur -= a[i - 1 + n / 2] - a[i - 1];
+		int diff = a[i + n / 2] - a[i - 1 + n / 2];
+		cur += n / 2 * diff;
+		cur -= (n - 1) / 2 * diff;
+		cur += a[i + n - 1] - a[i + n / 2];
+		ans = min(ans, cur);
+	}
+	cout << ans << '\n';
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	int t;
+	cin >> t;
+	while (t--) solve();
+}
