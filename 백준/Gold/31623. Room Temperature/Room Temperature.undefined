@@ -1,0 +1,33 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define all1(x) begin(x) + 1, end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+void solve()
+{
+	int n, t;
+	cin >> n >> t;
+	vector<int> a;
+	for (int i = 0; i < n; i++) {
+		int x;
+		cin >> x;
+		a.push_back(x % t);
+	}
+	sort(all(a));
+	a.erase(unique(all(a)), a.end());
+	int ans = (a[a.size() - 1] - a[0] + 1) / 2;
+	for (int i = 1; i < a.size(); i++) {
+		ans = min(ans, (a[i - 1] + t - a[i] + 1) / 2);
+	}
+	cout << ans;
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	solve();
+}
