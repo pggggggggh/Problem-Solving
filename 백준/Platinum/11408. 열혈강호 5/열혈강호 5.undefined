@@ -1,0 +1,115 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define all1(x) begin(x) + 1, end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+struct mcmf {
+	struct edge {
+		int u, v, cap, f, cost;
+	};
+
+	int n, m = 0;
+	vector<edge> edges;
+	vector<vector<int>> g; // 간선 번호 저장
+
+	mcmf(int n)
+	    : n(n)
+	{
+		g.resize(n);
+	}
+
+	void add_edge(int u, int v, int cap, int cost)
+	{
+		g[u].push_back(m);
+		g[v].push_back(m + 1);
+		edges.push_back({ u, v, cap, 0, cost });
+		edges.push_back({ v, u, 0, 0, -cost });
+		m += 2;
+	}
+
+	bool spfa(int s, int t, vector<int>& prev)
+	{
+		fill(all(prev), -1);
+		vector<int> inq(n), dist(n, 1e18);
+		queue<int> q;
+		q.push(s);
+		inq[s] = 1;
+		dist[s] = 0;
+
+		while (!q.empty()) {
+			int u = q.front();
+			q.pop();
+			inq[u] = 0;
+
+			for (auto& x : g[u]) {
+				auto& e = edges[x];
+				if (dist[u] + e.cost < dist[e.v] && e.f < e.cap) {
+					dist[e.v] = dist[u] + e.cost;
+					prev[e.v] = x;
+					if (!inq[e.v]) {
+						q.push(e.v);
+						inq[e.v] = true;
+					}
+				}
+			}
+		}
+
+		return prev[t] != -1;
+	}
+
+	pi go(int s, int t)
+	{
+		int flow = 0;
+		int cost = 0;
+		vector<int> prev(n); // 무슨 간선을 타고 왔나요?
+		while (spfa(s, t, prev)) {
+			int cur = t;
+			vector<int> e; // 타고 온 엣지들
+			while (prev[cur] != -1) {
+				e.push_back(prev[cur]);
+				cur = edges[prev[cur]].u;
+			}
+			int toadd = 1e18;
+			for (auto& x : e) toadd = min(toadd, edges[x].cap - edges[x].f);
+			for (auto& x : e) {
+				edges[x].f += toadd;
+				edges[x ^ 1].f -= toadd;
+				cost += edges[x].cost * toadd;
+			}
+			flow += toadd;
+		}
+		return { flow, cost };
+	}
+};
+
+void solve()
+{
+	int n, m;
+	cin >> n >> m;
+	mcmf flow(n + m + 2);
+	for (int i = 1; i <= n; i++) flow.add_edge(0, i, 1, 0);
+	for (int i = 1; i <= m; i++) flow.add_edge(n + i, n + m + 1, 1, 0);
+	// 0:source, 1~n:직원, n+1~n+m:일, n+m+1:sink
+	for (int i = 1; i <= n; i++) {
+		int k;
+		cin >> k;
+		while (k--) {
+			int v, cost;
+			cin >> v >> cost;
+			flow.add_edge(i, n + v, 1, cost);
+		}
+	}
+	auto ans = flow.go(0, n + m + 1);
+	cout << ans.first << '\n'
+	     << ans.second << '\n';
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	solve();
+}
