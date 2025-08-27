@@ -1,0 +1,73 @@
+#include <bits/stdc++.h>
+#define int long long
+using namespace std;
+
+struct lazyseg {
+	vector<int> seg, lazy;
+	int sz;
+
+	lazyseg(int n, vector<int>& a)
+	{
+		sz = 1;
+		while (sz < n) sz *= 2;
+		seg.resize(2 * sz);
+		lazy.resize(2 * sz);
+		for (int i = 1; i <= n; i++) seg[sz + i] = a[i];
+		for (int i = sz - 1; i >= 1; i--) seg[i] = seg[i * 2] + seg[i * 2 + 1];
+	}
+
+	void propa(int node, int l, int r)
+	{
+		seg[node] += lazy[node] * (r - l + 1);
+		if (l != r) {
+			lazy[node * 2] += lazy[node];
+			lazy[node * 2 + 1] += lazy[node];
+		}
+		lazy[node] = 0;
+	}
+
+	int query(int s, int e, int node, int l, int r)
+	{
+		propa(node, l, r);
+		if (e < l || r < s) return 0;
+		if (s <= l && r <= e) return seg[node];
+		int mid = l + r >> 1;
+		return query(s, e, node * 2, l, mid) + query(s, e, node * 2 + 1, mid + 1, r);
+	}
+
+	void update(int s, int e, int x, int node, int l, int r)
+	{
+		propa(node, l, r);
+		if (e < l || r < s) return;
+		if (s <= l && r <= e) {
+			lazy[node] += x;
+			propa(node, l, r);
+			return;
+		}
+		int mid = l + r >> 1;
+		update(s, e, x, node * 2, l, mid);
+		update(s, e, x, node * 2 + 1, mid + 1, r);
+		seg[node] = seg[node * 2] + seg[node * 2 + 1];
+	}
+};
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	int n, m, k;
+	cin >> n >> m >> k;
+	vector<int> a(n + 1);
+	for (int i = 1; i <= n; i++) cin >> a[i];
+	lazyseg seg(n + 1, a);
+	int q = m + k;
+	while (q--) {
+		int op, x, y, z;
+		cin >> op >> x >> y;
+		if (op == 1) {
+			cin >> z;
+			seg.update(x, y, z, 1, 0, seg.sz - 1);
+		} else cout << seg.query(x, y, 1, 0, seg.sz - 1) << '\n';
+	}
+}
