@@ -147,23 +147,23 @@ signed main()
 		for (int i = 1; i <= N; i++)
 			for (int j = 1; j <= N; j++) {
 				mcmf.add_edge(i, j + N, 1, D[V[0][i - 1]][V[1][j - 1]]);
-				// adj[i].push_back({ j + N, cnt << 1 }), adj[j + N].push_back({ i, cnt << 1 | 1 });
-				// cap[cnt << 1] = 1, cost[cnt << 1] = D[V[0][i - 1]][V[1][j - 1]], cost[cnt << 1 | 1] = -cost[cnt << 1];
-				// G[cnt << 1][0] = i, G[cnt << 1][1] = j + N, cnt++;
+				adj[i].push_back({ j + N, cnt << 1 }), adj[j + N].push_back({ i, cnt << 1 | 1 });
+				cap[cnt << 1] = 1, cost[cnt << 1] = D[V[0][i - 1]][V[1][j - 1]], cost[cnt << 1 | 1] = -cost[cnt << 1];
+				G[cnt << 1][0] = i, G[cnt << 1][1] = j + N, cnt++;
 			}
 
 		for (int i = 1; i <= N; i++) {
 			mcmf.add_edge(S, i, 1, 0);
 
-			// adj[S].push_back({ i, cnt << 1 }), adj[i].push_back({ S, cnt << 1 | 1 });
-			// cap[cnt << 1] = 1;
-			// G[cnt << 1][0] = S, G[cnt << 1][1] = i, cnt++;
+			adj[S].push_back({ i, cnt << 1 }), adj[i].push_back({ S, cnt << 1 | 1 });
+			cap[cnt << 1] = 1;
+			G[cnt << 1][0] = S, G[cnt << 1][1] = i, cnt++;
 
 			mcmf.add_edge(i + N, E, 1, 0);
 
-			// adj[i + N].push_back({ E, cnt << 1 }), adj[E].push_back({ i + N, cnt << 1 | 1 });
-			// cap[cnt << 1] = 1;
-			// G[cnt << 1][0] = i + N, G[cnt << 1][1] = E, cnt++;
+			adj[i + N].push_back({ E, cnt << 1 }), adj[E].push_back({ i + N, cnt << 1 | 1 });
+			cap[cnt << 1] = 1;
+			G[cnt << 1][0] = i + N, G[cnt << 1][1] = E, cnt++;
 		}
 
 		// while (true) {
