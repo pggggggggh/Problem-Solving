@@ -1,0 +1,208 @@
+#include <bits/stdc++.h>
+#define int long long
+
+using namespace std;
+
+typedef array<int, 2> pr;
+
+const int MAX_N = 501;
+const int MAX = 600001;
+const int INF = 2e9;
+
+int D[MAX_N][MAX_N], A[MAX], B[MAX],
+    flow[MAX], cap[MAX], par[MAX], cost[MAX], dis[MAX], G[MAX][2];
+bool chk[MAX];
+vector<pr> adj[MAX];
+
+struct min_cost_max_flow {
+	struct edge {
+		int from, to;
+		int c, f = 0;
+		int cost;
+		int left() { return c - f; }
+
+		edge(int from, int to, int c, int cost)
+		    : from(from), to(to), c(c), cost(cost)
+		{
+		}
+	};
+
+	int n, m, s, t;
+	vector<edge> E;
+	vector<vector<int>> g;
+	vector<int> prev;
+
+	min_cost_max_flow(int n)
+	{
+		this->n = n;
+		m = 0;
+		g.resize(n);
+		prev.resize(n);
+	}
+
+	void add_edge(int from, int to, int c, int cost)
+	{
+		E.push_back({ from, to, c, cost }); // invert these two cost signs for max cost
+		E.push_back({ to, from, 0, -cost });
+		g[from].push_back(m);
+		g[to].push_back(m + 1);
+		m += 2;
+	}
+
+	bool spfa()
+	{
+		vector<int> dist(n, 1e18);
+		vector<bool> inq(n, false);
+		queue<int> q;
+
+		fill(prev.begin(), prev.end(), -1);
+		dist[s] = 0;
+		q.push(s);
+		inq[s] = true;
+
+		while (!q.empty()) {
+			int now = q.front();
+			q.pop();
+			inq[now] = false;
+			for (auto& e : g[now]) {
+				int next = E[e].to;
+				if (E[e].left() > 0 && dist[now] + E[e].cost < dist[next]) {
+					dist[next] = dist[now] + E[e].cost;
+					prev[next] = e;
+
+					if (!inq[next]) {
+						q.push(next);
+						inq[next] = true;
+					}
+				}
+			}
+		}
+		return prev[t] != -1;
+	}
+
+	int mcmf(int s, int t)
+	{
+		this->s = s;
+		this->t = t;
+
+		int res = 0;
+		while (spfa()) {
+			int flow = 1e18;
+			int e = prev[t];
+			while (e != -1) {
+				flow = min(flow, E[e].left());
+				e = prev[E[e].from];
+			}
+			e = prev[t];
+			while (e != -1) {
+				res += flow * E[e].cost;
+				E[e].f += flow;
+				E[e ^ 1].f -= flow;
+				e = prev[E[e].from];
+			}
+		}
+		return res;
+	}
+};
+
+signed main()
+{
+	ios_base::sync_with_stdio(false);
+	cin.tie(0), cout.tie(0);
+
+	int T, N, M, X, Y, ans = 0, cnt, S, E;
+	queue<int> q;
+	vector<int> V[2];
+
+	cin >> T;
+	while (T--) {
+		cin >> N >> M;
+		for (int i = 1; i <= N; i++)
+			for (int j = 1; j <= N; j++)
+				D[i][j] = i == j ? 0 : INF;
+
+		while (M--) {
+			cin >> X >> Y;
+			D[X][Y] = D[Y][X] = 1;
+		}
+
+		for (int k = 1; k <= N; k++)
+			for (int i = 1; i <= N; i++)
+				for (int j = 1; j <= N; j++)
+					D[i][j] = min(D[i][j], D[i][k] + D[k][j]);
+
+		for (int i = 1; i <= N; i++)
+			cin >> A[i];
+		for (int i = 1; i <= N; i++) {
+			cin >> X;
+			if (A[i] ^ X)
+				V[X].push_back(i);
+		}
+
+		N = V[0].size();
+		S = 0, E = N << 1 | 1, ans = cnt = 0;
+
+		min_cost_max_flow mcmf(N * 2 + 5);
+
+		for (int i = 1; i <= N; i++)
+			for (int j = 1; j <= N; j++) {
+				mcmf.add_edge(i, j + N, 1, D[V[0][i - 1]][V[1][j - 1]]);
+				// adj[i].push_back({ j + N, cnt << 1 }), adj[j + N].push_back({ i, cnt << 1 | 1 });
+				// cap[cnt << 1] = 1, cost[cnt << 1] = D[V[0][i - 1]][V[1][j - 1]], cost[cnt << 1 | 1] = -cost[cnt << 1];
+				// G[cnt << 1][0] = i, G[cnt << 1][1] = j + N, cnt++;
+			}
+
+		for (int i = 1; i <= N; i++) {
+			mcmf.add_edge(S, i, 1, 0);
+
+			// adj[S].push_back({ i, cnt << 1 }), adj[i].push_back({ S, cnt << 1 | 1 });
+			// cap[cnt << 1] = 1;
+			// G[cnt << 1][0] = S, G[cnt << 1][1] = i, cnt++;
+
+			mcmf.add_edge(i + N, E, 1, 0);
+
+			// adj[i + N].push_back({ E, cnt << 1 }), adj[E].push_back({ i + N, cnt << 1 | 1 });
+			// cap[cnt << 1] = 1;
+			// G[cnt << 1][0] = i + N, G[cnt << 1][1] = E, cnt++;
+		}
+
+		// while (true) {
+		// 	for (int i = 0; i <= (N << 1 | 1); i++)
+		// 		dis[i] = INF, chk[i] = false, par[i] = -1;
+
+		// 	q.push(S), dis[S] = 0, chk[S] = true;
+		// 	while (!q.empty()) {
+		// 		X = q.front(), q.pop();
+		// 		chk[X] = false;
+
+		// 		for (pr i : adj[X]) {
+		// 			if (flow[i[1]] == cap[i[1]] || dis[X] + cost[i[1]] >= dis[i[0]])
+		// 				continue;
+		// 			dis[i[0]] = dis[X] + cost[i[1]], par[i[0]] = i[1];
+		// 			if (!chk[i[0]])
+		// 				q.push(i[0]), chk[i[0]] = true;
+		// 		}
+		// 	}
+
+		// 	if (par[E] == -1)
+		// 		break;
+
+		// 	X = INF;
+		// 	for (Y = E; Y != S; Y = G[par[Y] >> 1][par[Y] & 1])
+		// 		X = min(X, cap[par[Y]] - flow[par[Y]]);
+		// 	for (Y = E; Y != S; Y = G[par[Y] >> 1][par[Y] & 1])
+		// 		flow[par[Y]] += X, flow[par[Y] ^ 1] -= X;
+		// 	ans += dis[E] * X;
+		// }
+
+		cout << mcmf.mcmf(S, E) << '\n';
+
+		V[0].clear(), V[1].clear();
+		for (int i = 0; i <= (N << 1 | 1); i++)
+			adj[i].clear();
+		for (int i = 0; i <= (cnt << 1 | 1); i++)
+			flow[i] = cap[i] = cost[i] = G[i][0] = G[i][1] = 0;
+	}
+
+	return 0;
+}
