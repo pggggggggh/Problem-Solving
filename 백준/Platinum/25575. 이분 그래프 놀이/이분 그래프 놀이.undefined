@@ -1,0 +1,50 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+void solve()
+{
+	int n, m, k;
+	cin >> n >> m >> k;
+	vector<int> a(n), b(m);
+	vector<pi> e;
+	for (int i = 0; i < k; i++) {
+		int x, y;
+		cin >> x >> y;
+		x--, y--;
+		a[x]++;
+		b[y]++;
+		e.push_back({ x, y });
+	}
+	vector<int> c = a;
+	vector<int> d = b;
+	sort(all(c), greater<int>());
+	sort(all(d), greater<int>());
+	int ans = 0;
+	map<int, int> cmp, dmp;
+	for (int i = 0; i < n; i++) {
+		ans += (n - i) * c[i];
+		cmp[c[i]] = n - i;
+	}
+	for (int i = 0; i < m; i++) {
+		ans += (m - i) * d[i];
+		dmp[d[i]] = m - i;
+	}
+	int ans2 = 0;
+	for (auto& [x, y] : e) {
+		ans2 = max(ans2, ans - cmp[a[x]] - dmp[b[y]]);
+	}
+	cout << ans << ' ' << ans2 << '\n';
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	int t;
+	cin >> t;
+	while (t--) solve();
+}
