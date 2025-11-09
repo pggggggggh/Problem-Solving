@@ -1,0 +1,67 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+/*
+dp[i][j] : i를 보냈고 j번 막은 상황에서 최소비용
+dp[i][j] = min(max(dp[i][j+1]+k, dp[k][j]+k))-i+c k>i 중 찾아야 함
+
+*/
+
+int dp[10010][310];
+
+void solve()
+{
+	int n, m, c;
+	cin >> n >> m >> c;
+	for (int i = 0; i <= n + 5; i++) {
+		for (int j = 0; j <= m + 5; j++) {
+			dp[i][j] = 1e18;
+		}
+	}
+	for (int j = 0; j <= m; j++) dp[n][j] = 0;
+	for (int i = n - 1; i >= 0; i--) {
+		for (int j = m; j >= 0; j--) {
+			// int hubo = 1e18;
+			// for (int k = i + 1; k <= n; k++) {
+			// 	if (j < m) {
+			// 		hubo = min(hubo, max(dp[i][j + 1] + k, dp[k][j] + k));
+			// 		cout << max(dp[i][j + 1] + k, dp[k][j] + k) << ' ';
+			// 	} else {
+			// 		hubo = min(hubo, dp[k][j] + k);
+			// 		cout << dp[k][j] + k << ' ';
+			// 	}
+			// }
+			// cout << '\n';
+			// dp[i][j] = min(dp[i][j], hubo - i + c);
+
+			auto go = [&](int x) {
+				if (j < m) return max(dp[i][j + 1] + x, dp[x][j] + x);
+				return dp[x][j] + x;
+			};
+
+			int lo = i + 1, hi = n;
+			while (lo + 15 < hi) {
+				int p = (lo * 2 + hi) / 3;
+				int q = (lo + 2 * hi) / 3;
+
+				if (go(p) < go(q)) hi = q;
+				else lo = p;
+			}
+			int hubo = 1e18;
+			for (int x = lo; x <= hi; x++) hubo = min(hubo, go(x));
+			dp[i][j] = hubo - i + c;
+		}
+	}
+	cout << dp[0][0];
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	solve();
+}
