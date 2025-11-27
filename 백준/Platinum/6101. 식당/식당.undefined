@@ -22,8 +22,7 @@ void solve()
 		int uniq = 0;
 		int r = 1;
 		for (int l = 1; l <= n; l++) {
-			while (r <= l || r <= n) {
-				if (uniq >= k) break;
+			while (r <= n && uniq < k) {
 				if (cnt[a[r]] == 0) uniq++;
 				cnt[a[r]]++;
 				r++;
