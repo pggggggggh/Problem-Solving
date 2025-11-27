@@ -1,0 +1,54 @@
+#include "bits/stdc++.h"
+#define all(x) begin(x), end(x)
+#define all1(x) begin(x) + 1, end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+int rht[40005][205];
+int cnt[40005];
+int dp[40005];
+
+void solve()
+{
+	int n, k;
+	cin >> n >> k;
+	vector<int> a(n + 1);
+	for (int i = 1; i <= n; i++) cin >> a[i];
+	for (int i = 1; i <= n; i++) {
+		for (int k = 1; k <= 204; k++) rht[i][k] = 1e18;
+	}
+	for (int k = 1; k <= 200; k++) {
+		int uniq = 0;
+		int r = 1;
+		for (int l = 1; l <= n; l++) {
+			while (r <= l || r <= n) {
+				if (uniq >= k) break;
+				if (cnt[a[r]] == 0) uniq++;
+				cnt[a[r]]++;
+				r++;
+			}
+			if (uniq == k) rht[l][k] = r - 1;
+			if (cnt[a[l]] == 1) uniq--;
+			cnt[a[l]]--;
+		}
+	}
+	for (int i = 1; i <= n; i++) dp[i] = 1e18;
+	dp[n + 1] = 0;
+	for (int i = n; i >= 1; i--) {
+		for (int k = 1; i + k * k <= n + 1; k++) {
+			for (int j = rht[i][k] + 1; j <= min(n + 1, rht[i][k + 1]); j++) {
+				dp[i] = min(dp[i], dp[j] + k * k);
+			}
+		}
+	}
+	cout << dp[1];
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	solve();
+}
