@@ -1,0 +1,51 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+int yaksu[1000005];
+int dp[1000005];
+
+inline int comb3(int x)
+{
+	return x * (x - 1) * (x - 2) / 6;
+}
+
+void solve()
+{
+	int n;
+	cin >> n;
+	vector<int> a(n);
+	for (int i = 0; i < n; i++) {
+		cin >> a[i];
+		for (int j = 1; j * j <= a[i]; j++) {
+			if (a[i] % j == 0) {
+				yaksu[j]++;
+				if (j * j != a[i]) yaksu[a[i] / j]++;
+			}
+		}
+	}
+	int ans = 0;
+	for (int i = 1000000; i >= 2; i--) {
+		if (yaksu[i] >= 3) {
+			int add = comb3(yaksu[i]) - dp[i];
+			ans += add;
+			for (int j = 1; j * j <= i; j++) {
+				if (i % j == 0) {
+					dp[j] += add;
+					if (j * j != i) dp[i / j] += add;
+				}
+			}
+		}
+	}
+	cout << comb3(n) - ans;
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	solve();
+}
