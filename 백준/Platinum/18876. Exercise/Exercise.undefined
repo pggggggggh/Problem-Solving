@@ -1,0 +1,56 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+int notprime[10005];
+vector<int> p;
+int dp[1305][10005];
+
+void solve()
+{
+	int n, m;
+	cin >> n >> m;
+
+	notprime[1] = 1;
+	for (int i = 2; i <= 10000; i++) {
+		if (notprime[i]) continue;
+		for (int j = i * 2; j <= 10000; j += i) {
+			notprime[j] = 1;
+		}
+	}
+	for (int i = 1; i <= 10000; i++) {
+		if (!notprime[i]) {
+			p.push_back(i);
+		}
+	}
+	sort(all(p));
+	for (int i = 0; i < p.size(); i++) {
+		int nowp = p[i];
+		for (int j = 0; j <= 10000; j++) {
+			if (i) dp[i][j] = (dp[i][j] + dp[i - 1][j]) % m;
+		}
+		while (nowp <= 10000) {
+			dp[i][nowp] = (dp[i][nowp] + nowp) % m;
+			for (int j = nowp; j <= 10000; j++) {
+				if (i) {
+					dp[i][j] = (dp[i][j] + dp[i - 1][j - nowp] * nowp % m) % m;
+				}
+			}
+			nowp *= p[i];
+		}
+	}
+
+	int ans = 1;
+	for (int i = 1; i <= n; i++) ans = (ans + dp[p.size() - 1][i]) % m;
+	cout << ans;
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	solve();
+}
