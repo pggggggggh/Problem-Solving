@@ -1,0 +1,157 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+struct lazyseg {
+	using S = int;
+	using L = int;
+	const S seg_e = -1e9; // identity of seg_op
+	const L lazy_e = 0; // identity of lazy_op
+
+	S seg_op(S a, S b)
+	{ // combine two nodes
+		return max(a, b);
+	}
+
+	L lazy_op(L a, L b)
+	{ // combine two lazy values
+		return a + b;
+	}
+
+	void apply_lazy(S& s, L l, int len)
+	{
+		s += l;
+	}
+
+	int n, sz;
+	vector<S> seg;
+	vector<L> lazy;
+
+	lazyseg(int n, const vector<S>& v = vector<S>())
+	{
+		assert(n >= v.size());
+		this->n = n;
+		sz = 1;
+		while (sz < n) sz *= 2;
+		seg = vector<S>(2 * sz, seg_e);
+		lazy = vector<L>(2 * sz, lazy_e);
+		for (int i = 0; i < v.size(); i++) seg[i + sz] = v[i];
+		for (int i = sz - 1; i >= 1; i--) seg[i] = seg_op(seg[i * 2], seg[i * 2 + 1]);
+	}
+
+	void propa(int node, int l, int r)
+	{
+		if (lazy[node] == lazy_e) return;
+		apply_lazy(seg[node], lazy[node], r - l + 1);
+		if (l != r) {
+			lazy[node * 2] = lazy_op(lazy[node * 2], lazy[node]);
+			lazy[node * 2 + 1] = lazy_op(lazy[node * 2 + 1], lazy[node]);
+		}
+		lazy[node] = lazy_e;
+	}
+
+	void put(int x, S val, int node, int l, int r)
+	{
+		propa(node, l, r);
+		if (l == r) {
+			seg[node] = val;
+			return;
+		}
+		int mid = l + r >> 1;
+		if (x <= mid) put(x, val, node * 2, l, mid);
+		else put(x, val, node * 2 + 1, mid + 1, r);
+		seg[node] = seg_op(seg[node * 2], seg[node * 2 + 1]);
+	}
+
+	void put(int x, S val)
+	{
+		put(x, val, 1, 0, sz - 1);
+	}
+
+	void add(int x, int y, S val, int node, int l, int r)
+	{
+		propa(node, l, r);
+		if (r < x || y < l) return;
+		if (x <= l && r <= y) {
+			lazy[node] = lazy_op(lazy[node], val);
+			propa(node, l, r);
+			return;
+		}
+		int mid = l + r >> 1;
+		add(x, y, val, node * 2, l, mid);
+		add(x, y, val, node * 2 + 1, mid + 1, r);
+		seg[node] = seg_op(seg[node * 2], seg[node * 2 + 1]);
+	}
+
+	void add(int x, int y, S val)
+	{
+		add(x, y, val, 1, 0, sz - 1);
+	}
+
+	S query(int x, int y, int node, int l, int r)
+	{
+		propa(node, l, r);
+		if (r < x || y < l) return seg_e;
+		if (x <= l && r <= y) return seg[node];
+		int mid = l + r >> 1;
+		return seg_op(query(x, y, node * 2, l, mid), query(x, y, node * 2 + 1, mid + 1, r));
+	}
+
+	S query(int x, int y)
+	{
+		return query(x, y, 1, 0, sz - 1);
+	}
+};
+
+void solve()
+{
+	int n, k;
+	cin >> n >> k;
+	vector<vector<int>> adj(n + 1);
+	for (int i = 0; i < n - 1; i++) {
+		int x, y;
+		cin >> x >> y;
+		adj[x].push_back(y);
+		adj[y].push_back(x);
+	}
+	vector<int> in(n + 1), out(n + 1), dep(n + 1);
+	int dfn = 0;
+	function<void(int, int)> dfs = [&](int u, int p) {
+		in[u] = ++dfn;
+		for (auto& v : adj[u]) {
+			if (v == p) continue;
+			dep[v] = dep[u] + 1;
+			dfs(v, u);
+		}
+		out[u] = dfn;
+	};
+	dfs(1, -1);
+	lazyseg seg(n + 1);
+	for (int i = 1; i <= n; i++) {
+		seg.put(in[i], dep[i]);
+	}
+
+	int ans = 0;
+	function<void(int, int)> dfs2 = [&](int u, int p) {
+		for (auto& v : adj[u]) {
+			if (v == p) continue;
+			dfs2(v, u);
+		}
+		if (seg.query(in[u], out[u]) - dep[u] >= k) {
+			ans++;
+			seg.add(in[u], out[u], -1e9);
+		}
+	};
+	dfs2(1, -1);
+	cout << ans;
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	solve();
+}
