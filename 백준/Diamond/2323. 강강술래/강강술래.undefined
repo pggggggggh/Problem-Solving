@@ -1,0 +1,44 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+bool adj[5005][5005];
+
+void solve()
+{
+	int n, m;
+	cin >> n >> m;
+	for (int i = 0; i < m; i++) {
+		int x, y;
+		cin >> x >> y;
+		adj[x][y] = adj[y][x] = 1;
+	}
+	vector<int> sex;
+	for (int i = 1; i <= n; i++) sex.push_back(i);
+	while (1) {
+		random_shuffle(all(sex));
+		int good = 1;
+
+		for (int i = 0; i < n - 1; i++) {
+			if (!adj[sex[i]][sex[(i + 1) % n]]) {
+				good = 0;
+				break;
+			}
+		}
+		if (good) {
+			cout << "0\n";
+			for (auto& x : sex) cout << x << ' ';
+			return;
+		}
+	}
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	solve();
+}
