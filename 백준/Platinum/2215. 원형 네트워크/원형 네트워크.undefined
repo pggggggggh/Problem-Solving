@@ -1,0 +1,49 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+void solve()
+{
+	int n, p;
+	cin >> n >> p;
+	vector<pi> a(p);
+	for (int i = 0; i < p; i++) {
+		cin >> a[i].first >> a[i].second;
+		a[i].first--;
+		a[i].second--;
+		if (a[i].first > a[i].second) swap(a[i].first, a[i].second);
+	}
+	int ans = n;
+	for (int i = 0; i < n; i++) {
+		// i~i+1 끊기
+		vector<int> imos(n);
+		for (int j = 0; j < p; j++) {
+			if (a[j].first <= i && a[j].second >= i + 1) {
+				imos[0]++;
+				imos[a[j].first]--;
+				imos[a[j].second]++;
+			} else {
+				imos[a[j].first]++;
+				imos[a[j].second]--;
+			}
+		}
+		int now = 0;
+		int cnt = 0;
+		for (int j = 0; j < n; j++) {
+			now += imos[j];
+			cnt += now > 0;
+		}
+		ans = min(ans, cnt);
+	}
+	cout << ans;
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	solve();
+}
