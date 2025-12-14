@@ -1,0 +1,35 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+void solve()
+{
+	int n;
+	cin >> n;
+	vector<pi> a(n);
+	for (int i = 0; i < n; i++) cin >> a[i].first;
+	for (int i = 0; i < n; i++) cin >> a[i].second;
+	sort(all(a), [&](pi& x, pi& y) {
+		return x.second < y.second;
+	});
+	int ans = 0;
+	ans += a[0].first;
+	priority_queue<int> pq;
+	for (int i = 1; i < n / 2; i++) {
+		pq.push(a[2 * i - 1].first);
+		pq.push(a[2 * i].first);
+		ans += pq.top();
+		pq.pop();
+	}
+	cout << ans;
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	solve();
+}
