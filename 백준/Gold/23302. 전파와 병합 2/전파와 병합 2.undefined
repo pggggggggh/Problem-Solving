@@ -1,0 +1,84 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+int n, m;
+
+vector<string> tokenize(string s, string t)
+{
+	int pos = 0;
+	vector<string> res;
+	while (1) {
+		int nxt = s.find(t, pos);
+		if (nxt == string::npos) {
+			res.push_back(s.substr(pos));
+			break;
+		}
+		res.push_back(s.substr(pos, nxt - pos));
+		pos = nxt + 1;
+	}
+	return res;
+}
+
+int getpos(string s)
+{
+	string a, b;
+	for (int i = 0; i < s.size(); i++) {
+		if (s[i] >= 'A' && s[i] <= 'Z') {
+		} else {
+			a = s.substr(0, i);
+			b = s.substr(i);
+			break;
+		}
+	}
+	int base = 1;
+	int r = 0;
+	for (int i = a.size() - 1; i >= 0; i--) {
+		r += (a[i] - 'A' + 1) * base;
+		base *= 26;
+	}
+	return ((stoi(b) - 1) * m) + (r - 1);
+}
+
+void solve()
+{
+	cin >> n >> m;
+	vector<vector<int>> adj(n * m);
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < m; j++) {
+			string s;
+			cin >> s;
+			if (s == ".") continue;
+			vector<string> vs = tokenize(s, "+");
+			for (auto& x : vs) {
+				adj[i * m + j].push_back(getpos(x));
+			}
+		}
+	}
+	vector<int> vis(n * m), fin(n * m);
+	int cycle = 0;
+	function<void(int)> dfs = [&](int u) {
+		vis[u] = 1;
+		for (auto& v : adj[u]) {
+			if (!vis[v]) dfs(v);
+			else if (!fin[v]) {
+				cycle = 1;
+			}
+		}
+		fin[u] = 1;
+	};
+	for (int i = 0; i < n * m; i++) {
+		if (!vis[i]) dfs(i);
+	}
+	cout << (cycle ? "yes" : "no");
+}
+
+signed main()
+{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+
+	solve();
+}
