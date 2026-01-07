@@ -1,0 +1,170 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+void solve()
+{
+    int n, k;
+    cin >> n >> k;
+    vector<int> adj(n * n, -2), out(n * n); // -1 for out, -2 for no belt
+    vector<int> query(k);
+    for (int i = 0; i < k; i++)
+    {
+        int x, y;
+        char c;
+        cin >> x >> y >> c;
+        x--, y--;
+        int pos = x * n + y;
+        query[i] = pos;
+        if (c == 'R')
+        {
+            if (y == n - 1)
+            {
+                adj[pos] = -1;
+                out[pos] = 1;
+            }
+            else
+                adj[pos] = pos + 1;
+        }
+        else if (c == 'L')
+        {
+            if (y == 0)
+            {
+                adj[pos] = -1;
+                out[pos] = 1;
+            }
+            else
+                adj[pos] = pos - 1;
+        }
+        else if (c == 'U')
+        {
+            if (x == 0)
+            {
+                adj[pos] = -1;
+                out[pos] = 1;
+            }
+            else
+                adj[pos] = pos - n;
+        }
+        else
+        {
+            if (x == n - 1)
+            {
+                adj[pos] = -1;
+                out[pos] = 1;
+            }
+            else
+                adj[pos] = pos + n;
+        }
+    }
+    vector<int> dx = {-1, 1, 0, 0};
+    vector<int> dy = {0, 0, -1, 1};
+    for (int i = 0; i < n; i++)
+    {
+        if (adj[i] == -2)
+            out[i] = 1;
+        if (adj[n * (n - 1) + i] == -2)
+            out[n * (n - 1) + i] = 1;
+        if (adj[n * i] == -2)
+            out[n * i] = 1;
+        if (adj[n * i + (n - 1)] == -2)
+            out[n * i + (n - 1)] = 1;
+    }
+    queue<int> q;
+    vector<int> vis(n * n);
+    for (int i = 0; i < n * n; i++)
+    {
+        if (out[i])
+        {
+            q.push(i);
+            vis[i] = 1;
+        }
+    }
+    int ans = n * n;
+    while (!q.empty())
+    {
+        int u = q.front();
+        q.pop();
+        ans--;
+        for (int i = 0; i < 4; i++)
+        {
+            int nx = u / n + dx[i], ny = u % n + dy[i];
+            if (nx < 0 || nx >= n || ny < 0 || ny >= n)
+                continue;
+            int v = nx * n + ny;
+            if (adj[v] == -2 || adj[v] == u)
+            {
+                if (!vis[v])
+                {
+                    q.push(v);
+                    out[v] = 1;
+                    vis[v] = 1;
+                }
+            }
+        }
+    }
+    vector<int> realans(k);
+    realans[k - 1] = ans;
+    for (int i = k - 1; i >= 1; i--)
+    {
+        int u = query[i];
+        adj[u] = -2;
+        int good = 0;
+        for (int j = 0; j < 4; j++)
+        {
+            int nx = u / n + dx[j], ny = u % n + dy[j];
+            if (nx < 0 || nx >= n || ny < 0 || ny >= n)
+            {
+                good = 1;
+                break;
+            }
+            int v = nx * n + ny;
+            if (out[v])
+            {
+                good = 1;
+                break;
+            }
+        }
+        if (good && !vis[u])
+        {
+            q.push(u);
+            vis[u] = 1;
+            out[u] = 1;
+            while (!q.empty())
+            {
+                int u = q.front();
+                q.pop();
+                ans--;
+                for (int j = 0; j < 4; j++)
+                {
+                    int nx = u / n + dx[j], ny = u % n + dy[j];
+                    if (nx < 0 || nx >= n || ny < 0 || ny >= n)
+                        continue;
+                    int v = nx * n + ny;
+                    if (adj[v] == -2 || adj[v] == u)
+                    {
+                        if (!vis[v])
+                        {
+                            q.push(v);
+                            out[v] = 1;
+                            vis[v] = 1;
+                        }
+                    }
+                }
+            }
+        }
+        realans[i - 1] = ans;
+    }
+    for (int i = 0; i < k; i++)
+        cout << realans[i] << '\n';
+}
+
+signed main()
+{
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+
+    solve();
+}
