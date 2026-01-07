@@ -1,0 +1,116 @@
+#include <bits/stdc++.h>
+#define all(x) begin(x), end(x)
+#define int long long
+using namespace std;
+using pi = pair<int, int>;
+
+class Segtree
+{
+private:
+    int sz;
+    vector<int> seg;
+
+public:
+    Segtree(int n)
+    {
+        sz = 1;
+        while (sz < n)
+            sz *= 2;
+        seg.resize(2 * sz);
+    }
+
+    int query(int x, int y)
+    {
+        int res = 0;
+        x += sz, y += sz;
+        while (x <= y)
+        {
+            if (x % 2 == 1)
+                res = seg[x++] + res;
+            if (y % 2 == 0)
+                res = res + seg[y--];
+            x /= 2, y /= 2;
+        }
+        return res;
+    }
+
+    void add(int x, int val)
+    {
+        x += sz;
+        seg[x] += val;
+        while (1)
+        {
+            x /= 2;
+            if (x == 0)
+                return;
+            seg[x] = seg[x * 2] + seg[x * 2 + 1];
+        }
+    }
+};
+
+void solve()
+{
+    int n, k;
+    cin >> n >> k;
+    vector<int> a(n);
+    vector<array<int, 3>> b(k);
+    vector<int> coord;
+    for (int i = 0; i < n; i++)
+    {
+        cin >> a[i];
+        coord.push_back(a[i]);
+    }
+    for (int i = 0; i < k; i++)
+    {
+        cin >> b[i][0] >> b[i][1] >> b[i][2];
+        coord.push_back(b[i][0]);
+        coord.push_back(b[i][1]);
+    }
+    sort(all(coord));
+    coord.erase(unique(all(coord)), coord.end());
+    for (int i = 0; i < n; i++)
+    {
+        a[i] = lower_bound(all(coord), a[i]) - coord.begin();
+    }
+    for (int i = 0; i < k; i++)
+    {
+        b[i][0] = lower_bound(all(coord), b[i][0]) - coord.begin();
+        b[i][1] = lower_bound(all(coord), b[i][1]) - coord.begin();
+    }
+
+    sort(all(b), [&](array<int, 3> &x, array<int, 3> &y)
+         {  if (x[1] == y[1] && x[0]==y[0]) return x[2]>y[2];
+            if (x[1] == y[1]) return x[0]<y[0];
+        return x[1]<y[1]; });
+
+    int ans = 0;
+    Segtree seg(coord.size() + 1);
+    multiset<int> ast(a.begin(), a.end());
+    for (auto &[s, e, x] : b)
+    {
+        int already = seg.query(s, e);
+        int tofill = x - already;
+        if (tofill <= 0)
+            continue;
+        auto it = ast.upper_bound(e);
+        while (tofill--)
+        {
+            ans++;
+            it = prev(it);
+            seg.add(*it, 1);
+            it = ast.erase(it);
+        }
+    }
+    cout << n - ans << '\n';
+}
+
+signed main()
+{
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+
+    int t;
+    cin >> t;
+    while (t--)
+        solve();
+}
