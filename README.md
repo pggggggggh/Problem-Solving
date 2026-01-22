@@ -9,6 +9,7 @@ This is an auto push repository for Baekjoon Online Judge created with [Baekjoon
 | [0528-random-pick-with-weight](https://github.com/pggggggggh/Problem-Solving/tree/master/0528-random-pick-with-weight) |
 | [0843-guess-the-word](https://github.com/pggggggggh/Problem-Solving/tree/master/0843-guess-the-word) |
 | [1293-shortest-path-in-a-grid-with-obstacles-elimination](https://github.com/pggggggggh/Problem-Solving/tree/master/1293-shortest-path-in-a-grid-with-obstacles-elimination) |
+| [2416-sum-of-prefix-scores-of-strings](https://github.com/pggggggggh/Problem-Solving/tree/master/2416-sum-of-prefix-scores-of-strings) |
 ## Breadth-First Search
 |  |
 | ------- |
@@ -26,6 +27,7 @@ This is an auto push repository for Baekjoon Online Judge created with [Baekjoon
 |  |
 | ------- |
 | [0843-guess-the-word](https://github.com/pggggggggh/Problem-Solving/tree/master/0843-guess-the-word) |
+| [2416-sum-of-prefix-scores-of-strings](https://github.com/pggggggggh/Problem-Solving/tree/master/2416-sum-of-prefix-scores-of-strings) |
 ## Interactive
 |  |
 | ------- |
@@ -46,4 +48,12 @@ This is an auto push repository for Baekjoon Online Judge created with [Baekjoon
 |  |
 | ------- |
 | [0528-random-pick-with-weight](https://github.com/pggggggggh/Problem-Solving/tree/master/0528-random-pick-with-weight) |
+## Trie
+|  |
+| ------- |
+| [2416-sum-of-prefix-scores-of-strings](https://github.com/pggggggggh/Problem-Solving/tree/master/2416-sum-of-prefix-scores-of-strings) |
+## Counting
+|  |
+| ------- |
+| [2416-sum-of-prefix-scores-of-strings](https://github.com/pggggggggh/Problem-Solving/tree/master/2416-sum-of-prefix-scores-of-strings) |
 <!---LeetCode Topics End-->
