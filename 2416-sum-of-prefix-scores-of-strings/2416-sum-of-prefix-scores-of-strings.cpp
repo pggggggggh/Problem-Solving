@@ -8,7 +8,7 @@ public:
         for (string &word:words) {
             long curHash = 0;
             for (char &c:word) {
-                curHash = (curHash*27+(c-'a'+1))%MOD;
+                curHash = (curHash*26+(c-'a'+1))%MOD;
                 mapOfCnt[curHash]++;
             }
         }
@@ -17,7 +17,7 @@ public:
             int curCnt = 0;
             long curHash = 0;
             for (char &c:word) {
-                curHash = (curHash*27+(c-'a'+1))%MOD;
+                curHash = (curHash*26+(c-'a'+1))%MOD;
                 curCnt += mapOfCnt[curHash];
             }
             result.push_back(curCnt);
