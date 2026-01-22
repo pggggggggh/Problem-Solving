@@ -1,6 +1,6 @@
 class Solution {
 private:
-const long MOD = 200560490131LL;
+const long MOD = 1000000000000007;
 
 public:
     vector<int> sumPrefixScores(vector<string>& words) {
