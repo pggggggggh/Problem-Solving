@@ -18,11 +18,6 @@ public:
     }
     
     void put(int key, int value) {
-        if (lst.empty()) {
-            lst.push_back({key,value});
-            keyToIt[key] = prev(lst.end());
-            return;
-        }
         if (keyToIt.find(key) != keyToIt.end()) {
             list<pair<int,int>>::iterator it = keyToIt[key];
             lst.erase(it);
@@ -30,7 +25,6 @@ public:
             keyToIt[key] = prev(lst.end());
             return;
         }
-
         if (lst.size() == capacity) {
             int eraseKey = (*lst.begin()).first;
             keyToIt.erase(eraseKey);
