@@ -63,5 +63,18 @@ This is an auto push repository for Baekjoon Online Judge created with [Baekjoon
 ## Design
 |  |
 | ------- |
+| [0146-lru-cache](https://github.com/pggggggggh/Problem-Solving/tree/master/0146-lru-cache) |
 | [0155-min-stack](https://github.com/pggggggggh/Problem-Solving/tree/master/0155-min-stack) |
+## Hash Table
+|  |
+| ------- |
+| [0146-lru-cache](https://github.com/pggggggggh/Problem-Solving/tree/master/0146-lru-cache) |
+## Linked List
+|  |
+| ------- |
+| [0146-lru-cache](https://github.com/pggggggggh/Problem-Solving/tree/master/0146-lru-cache) |
+## Doubly-Linked List
+|  |
+| ------- |
+| [0146-lru-cache](https://github.com/pggggggggh/Problem-Solving/tree/master/0146-lru-cache) |
 <!---LeetCode Topics End-->
