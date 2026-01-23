@@ -1,27 +1,41 @@
 class Solution {
 private:
-const long MOD = 1000000000000007;
+struct Node {
+    Node* childs[26];
+    int numChilds;
+    Node() {
+        numChilds = 0;
+        for (int i=0;i<26;i++) childs[i] = nullptr;
+    }
+};
+Node* root;
 
 public:
+    Solution() {
+        root = new Node();
+    }
+
     vector<int> sumPrefixScores(vector<string>& words) {
-        unordered_map<long,int> mapOfCnt;
-        for (string &word:words) {
-            long curHash = 0;
-            for (char &c:word) {
-                curHash = (curHash*26+(c-'a'+1))%MOD;
-                mapOfCnt[curHash]++;
+        for (string& word:words) {
+            Node* cur = root;
+            for (char& c:word) {
+                if (cur->childs[c-'a'] == nullptr) {
+                    cur->childs[c-'a'] = new Node();
+                }
+                cur = cur->childs[c-'a'];
+                cur->numChilds++;
             }
         }
-        vector<int> result;
-        for (string &word:words) {
+        vector<int> res;
+        for (string& word:words) {
+            Node* cur = root;
             int curCnt = 0;
-            long curHash = 0;
             for (char &c:word) {
-                curHash = (curHash*26+(c-'a'+1))%MOD;
-                curCnt += mapOfCnt[curHash];
+                cur = cur->childs[c-'a'];
+                curCnt += cur->numChilds;
             }
-            result.push_back(curCnt);
+            res.push_back(curCnt);
         }
-        return result;
+        return res;
     }
 };
