@@ -1,7 +1,6 @@
 class MinStack {
 private:
-    priority_queue<int,vector<int>,greater<int>> pq, pqErase;
-    vector<int> stk;
+    vector<pair<int,int>> stk;
 
 public:
     MinStack() {
@@ -9,25 +8,23 @@ public:
     }
     
     void push(int val) {
-        stk.push_back(val);
-        pq.push(val);
+        if (stk.empty()) stk.push_back({val,val});
+        else {
+            int curMin = stk.back().second;
+            stk.push_back({val,min(val,curMin)});
+        }
     }
     
     void pop() {
-        pqErase.push(stk.back());
-        while (!pqErase.empty() && pq.top() == pqErase.top()) {
-            pq.pop();
-            pqErase.pop();
-        }
         stk.pop_back();
     }
     
     int top() {
-        return stk.back();
+        return stk.back().first;
     }
     
     int getMin() {
-        return pq.top();
+        return stk.back().second;
     }
 };
 
