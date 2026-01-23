@@ -56,4 +56,12 @@ This is an auto push repository for Baekjoon Online Judge created with [Baekjoon
 |  |
 | ------- |
 | [2416-sum-of-prefix-scores-of-strings](https://github.com/pggggggggh/Problem-Solving/tree/master/2416-sum-of-prefix-scores-of-strings) |
+## Stack
+|  |
+| ------- |
+| [0155-min-stack](https://github.com/pggggggggh/Problem-Solving/tree/master/0155-min-stack) |
+## Design
+|  |
+| ------- |
+| [0155-min-stack](https://github.com/pggggggggh/Problem-Solving/tree/master/0155-min-stack) |
 <!---LeetCode Topics End-->
