@@ -69,10 +69,12 @@ This is an auto push repository for Baekjoon Online Judge created with [Baekjoon
 ## Hash Table
 |  |
 | ------- |
+| [0142-linked-list-cycle-ii](https://github.com/pggggggggh/Problem-Solving/tree/master/0142-linked-list-cycle-ii) |
 | [0146-lru-cache](https://github.com/pggggggggh/Problem-Solving/tree/master/0146-lru-cache) |
 ## Linked List
 |  |
 | ------- |
+| [0142-linked-list-cycle-ii](https://github.com/pggggggggh/Problem-Solving/tree/master/0142-linked-list-cycle-ii) |
 | [0146-lru-cache](https://github.com/pggggggggh/Problem-Solving/tree/master/0146-lru-cache) |
 ## Doubly-Linked List
 |  |
@@ -94,4 +96,8 @@ This is an auto push repository for Baekjoon Online Judge created with [Baekjoon
 |  |
 | ------- |
 | [0215-kth-largest-element-in-an-array](https://github.com/pggggggggh/Problem-Solving/tree/master/0215-kth-largest-element-in-an-array) |
+## Two Pointers
+|  |
+| ------- |
+| [0142-linked-list-cycle-ii](https://github.com/pggggggggh/Problem-Solving/tree/master/0142-linked-list-cycle-ii) |
 <!---LeetCode Topics End-->
