@@ -6,6 +6,7 @@ This is an auto push repository for Baekjoon Online Judge created with [Baekjoon
 ## Array
 |  |
 | ------- |
+| [0215-kth-largest-element-in-an-array](https://github.com/pggggggggh/Problem-Solving/tree/master/0215-kth-largest-element-in-an-array) |
 | [0528-random-pick-with-weight](https://github.com/pggggggggh/Problem-Solving/tree/master/0528-random-pick-with-weight) |
 | [0843-guess-the-word](https://github.com/pggggggggh/Problem-Solving/tree/master/0843-guess-the-word) |
 | [1293-shortest-path-in-a-grid-with-obstacles-elimination](https://github.com/pggggggggh/Problem-Solving/tree/master/1293-shortest-path-in-a-grid-with-obstacles-elimination) |
@@ -77,4 +78,20 @@ This is an auto push repository for Baekjoon Online Judge created with [Baekjoon
 |  |
 | ------- |
 | [0146-lru-cache](https://github.com/pggggggggh/Problem-Solving/tree/master/0146-lru-cache) |
+## Divide and Conquer
+|  |
+| ------- |
+| [0215-kth-largest-element-in-an-array](https://github.com/pggggggggh/Problem-Solving/tree/master/0215-kth-largest-element-in-an-array) |
+## Sorting
+|  |
+| ------- |
+| [0215-kth-largest-element-in-an-array](https://github.com/pggggggggh/Problem-Solving/tree/master/0215-kth-largest-element-in-an-array) |
+## Heap (Priority Queue)
+|  |
+| ------- |
+| [0215-kth-largest-element-in-an-array](https://github.com/pggggggggh/Problem-Solving/tree/master/0215-kth-largest-element-in-an-array) |
+## Quickselect
+|  |
+| ------- |
+| [0215-kth-largest-element-in-an-array](https://github.com/pggggggggh/Problem-Solving/tree/master/0215-kth-largest-element-in-an-array) |
 <!---LeetCode Topics End-->
