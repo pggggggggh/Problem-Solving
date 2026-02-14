@@ -1,26 +1,27 @@
 #include <iostream>
+using namespace std;
 
 int main()
 {
-    std::ios_base::sync_with_stdio(0);
-    std::cin.tie(0);
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
 
     int n;
-    while (std::cin >> n)
+    while (cin >> n)
     {
         for (int i = 0; i < n - 1; ++i)
         {
             for (int j = 0; j < i; ++j)
-                std::cout << ' ';
-            std::cout << '*';
+                cout << ' ';
+            cout << '*';
             for (int j = 0; j < 2 * (n - i - 1) - 1; ++j)
-                std::cout << ' ';
-            std::cout << '*';
-            std::cout << '\n';
+                cout << ' ';
+            cout << '*';
+            cout << '\n';
         }
         for (int i = 0; i < n - 1; ++i)
-            std::cout << ' ';
-        std::cout << '*';
-        std::cout << '\n';
+            cout << ' ';
+        cout << '*';
+        cout << '\n';
     }
 }
