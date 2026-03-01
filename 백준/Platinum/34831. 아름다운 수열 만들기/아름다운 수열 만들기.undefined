@@ -1,0 +1,33 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main()
+{
+    int n;
+    cin >> n;
+    if (n % 5 != 1)
+    {
+        cout << "No";
+        return 0;
+    }
+    int adj[3][3];
+    adj[0][1] = adj[1][0] = adj[1][2] = adj[2][1] = (n - 1) / 5 * 2;
+    adj[0][2] = adj[2][0] = (n - 1) / 5;
+
+    function<void(int)> recur = [&](int u)
+    {
+        for (int v = 0; v < 3; v++)
+        {
+            if (u == v)
+                continue;
+            if (adj[u][v] > 0 && adj[v][u] > 0)
+            {
+                adj[u][v]--, adj[v][u]--;
+                recur(v);
+            }
+        }
+        cout << u << ' ';
+    };
+    cout << "Yes\n";
+    recur(0);
+}
