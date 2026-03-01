@@ -38,25 +38,11 @@ int main()
                 return;
             }
 
-            unordered_set<int> st;
-            for (int i = piv + 1; i <= by; i++)
-                st.insert(b[i]);
-            for (int i = ax;; i++)
-            {
-                if (i == n)
-                {
-                    cout << "!\n";
-                    return;
-                }
-                if (st.count(a[i]))
-                {
-                    l[a[ax]] = a[ax + 1];
-                    r[a[ax]] = a[i];
-                    recur(ax + 1, i - 1, bx, piv - 1);
-                    recur(i, ay, piv + 1, by);
-                    return;
-                }
-            }
+            int apiv = piv - bx + ax + 1;
+            l[a[ax]] = a[ax + 1];
+            r[a[ax]] = a[apiv];
+            recur(ax + 1, apiv - 1, bx, piv - 1);
+            recur(apiv, ay, piv + 1, by);
         };
         recur(0, n - 1, 0, n - 1);
 
