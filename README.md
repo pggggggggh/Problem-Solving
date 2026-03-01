@@ -27,6 +27,7 @@ This is an auto push repository for Baekjoon Online Judge created with [Baekjoon
 ## String
 |  |
 | ------- |
+| [0767-reorganize-string](https://github.com/pggggggggh/Problem-Solving/tree/master/0767-reorganize-string) |
 | [0843-guess-the-word](https://github.com/pggggggggh/Problem-Solving/tree/master/0843-guess-the-word) |
 | [2416-sum-of-prefix-scores-of-strings](https://github.com/pggggggggh/Problem-Solving/tree/master/2416-sum-of-prefix-scores-of-strings) |
 ## Interactive
@@ -56,6 +57,7 @@ This is an auto push repository for Baekjoon Online Judge created with [Baekjoon
 ## Counting
 |  |
 | ------- |
+| [0767-reorganize-string](https://github.com/pggggggggh/Problem-Solving/tree/master/0767-reorganize-string) |
 | [2416-sum-of-prefix-scores-of-strings](https://github.com/pggggggggh/Problem-Solving/tree/master/2416-sum-of-prefix-scores-of-strings) |
 ## Stack
 |  |
@@ -71,6 +73,7 @@ This is an auto push repository for Baekjoon Online Judge created with [Baekjoon
 | ------- |
 | [0142-linked-list-cycle-ii](https://github.com/pggggggggh/Problem-Solving/tree/master/0142-linked-list-cycle-ii) |
 | [0146-lru-cache](https://github.com/pggggggggh/Problem-Solving/tree/master/0146-lru-cache) |
+| [0767-reorganize-string](https://github.com/pggggggggh/Problem-Solving/tree/master/0767-reorganize-string) |
 ## Linked List
 |  |
 | ------- |
@@ -88,10 +91,12 @@ This is an auto push repository for Baekjoon Online Judge created with [Baekjoon
 |  |
 | ------- |
 | [0215-kth-largest-element-in-an-array](https://github.com/pggggggggh/Problem-Solving/tree/master/0215-kth-largest-element-in-an-array) |
+| [0767-reorganize-string](https://github.com/pggggggggh/Problem-Solving/tree/master/0767-reorganize-string) |
 ## Heap (Priority Queue)
 |  |
 | ------- |
 | [0215-kth-largest-element-in-an-array](https://github.com/pggggggggh/Problem-Solving/tree/master/0215-kth-largest-element-in-an-array) |
+| [0767-reorganize-string](https://github.com/pggggggggh/Problem-Solving/tree/master/0767-reorganize-string) |
 ## Quickselect
 |  |
 | ------- |
@@ -100,4 +105,8 @@ This is an auto push repository for Baekjoon Online Judge created with [Baekjoon
 |  |
 | ------- |
 | [0142-linked-list-cycle-ii](https://github.com/pggggggggh/Problem-Solving/tree/master/0142-linked-list-cycle-ii) |
+## Greedy
+|  |
+| ------- |
+| [0767-reorganize-string](https://github.com/pggggggggh/Problem-Solving/tree/master/0767-reorganize-string) |
 <!---LeetCode Topics End-->
