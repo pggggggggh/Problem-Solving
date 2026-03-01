@@ -1,0 +1,74 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main()
+{
+    int t;
+    cin >> t;
+    while (t--)
+    {
+        int n;
+        cin >> n;
+        vector<int> a(n), b(n);
+        vector<int> pos_in_b(n + 1);
+        for (int i = 0; i < n; i++)
+            cin >> a[i];
+        for (int i = 0; i < n; i++)
+        {
+            cin >> b[i];
+            pos_in_b[b[i]] = i;
+        }
+        vector<int> l(n + 1, -1), r(n + 1, -1);
+        function<void(int, int, int, int)> recur = [&](int ax, int ay, int bx, int by)
+        {
+            if (ax == ay)
+                return;
+            int piv = pos_in_b[a[ax]];
+
+            if (piv == by)
+            {
+                l[a[ax]] = a[ax + 1];
+                recur(ax + 1, ay, bx, by - 1);
+                return;
+            }
+            if (piv == bx)
+            {
+                r[a[ax]] = a[ax + 1];
+                recur(ax + 1, ay, bx + 1, by);
+                return;
+            }
+
+            unordered_set<int> st;
+            for (int i = piv + 1; i <= by; i++)
+                st.insert(b[i]);
+            for (int i = ax;; i++)
+            {
+                if (i == n)
+                {
+                    cout << "!\n";
+                    return;
+                }
+                if (st.count(a[i]))
+                {
+                    l[a[ax]] = a[ax + 1];
+                    r[a[ax]] = a[i];
+                    recur(ax + 1, i - 1, bx, piv - 1);
+                    recur(i, ay, piv + 1, by);
+                    return;
+                }
+            }
+        };
+        recur(0, n - 1, 0, n - 1);
+
+        function<void(int)> postorder = [&](int u)
+        {
+            if (l[u] != -1)
+                postorder(l[u]);
+            if (r[u] != -1)
+                postorder(r[u]);
+            cout << u << ' ';
+        };
+        postorder(a[0]);
+        cout << '\n';
+    }
+}
