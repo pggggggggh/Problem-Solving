@@ -6,6 +6,7 @@ This is an auto push repository for Baekjoon Online Judge created with [Baekjoon
 ## Array
 |  |
 | ------- |
+| [0001-two-sum](https://github.com/pggggggggh/Problem-Solving/tree/master/0001-two-sum) |
 | [0215-kth-largest-element-in-an-array](https://github.com/pggggggggh/Problem-Solving/tree/master/0215-kth-largest-element-in-an-array) |
 | [0528-random-pick-with-weight](https://github.com/pggggggggh/Problem-Solving/tree/master/0528-random-pick-with-weight) |
 | [0843-guess-the-word](https://github.com/pggggggggh/Problem-Solving/tree/master/0843-guess-the-word) |
@@ -75,6 +76,7 @@ This is an auto push repository for Baekjoon Online Judge created with [Baekjoon
 ## Hash Table
 |  |
 | ------- |
+| [0001-two-sum](https://github.com/pggggggggh/Problem-Solving/tree/master/0001-two-sum) |
 | [0142-linked-list-cycle-ii](https://github.com/pggggggggh/Problem-Solving/tree/master/0142-linked-list-cycle-ii) |
 | [0146-lru-cache](https://github.com/pggggggggh/Problem-Solving/tree/master/0146-lru-cache) |
 | [0767-reorganize-string](https://github.com/pggggggggh/Problem-Solving/tree/master/0767-reorganize-string) |
