@@ -144,4 +144,5 @@ This is an auto push repository for Baekjoon Online Judge created with [Baekjoon
 |  |
 | ------- |
 | [1115-print-foobar-alternately](https://github.com/pggggggggh/Problem-Solving/tree/master/1115-print-foobar-alternately) |
+| [1116-print-zero-even-odd](https://github.com/pggggggggh/Problem-Solving/tree/master/1116-print-zero-even-odd) |
 <!---LeetCode Topics End-->
