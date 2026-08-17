@@ -140,4 +140,8 @@ This is an auto push repository for Baekjoon Online Judge created with [Baekjoon
 |  |
 | ------- |
 | [0003-longest-substring-without-repeating-characters](https://github.com/pggggggggh/Problem-Solving/tree/master/0003-longest-substring-without-repeating-characters) |
+## Concurrency
+|  |
+| ------- |
+| [1115-print-foobar-alternately](https://github.com/pggggggggh/Problem-Solving/tree/master/1115-print-foobar-alternately) |
 <!---LeetCode Topics End-->
