@@ -151,4 +151,5 @@ This is an auto push repository for Baekjoon Online Judge created with [Baekjoon
 | [0175-combine-two-tables](https://github.com/pggggggggh/Problem-Solving/tree/master/0175-combine-two-tables) |
 | [0178-rank-scores](https://github.com/pggggggggh/Problem-Solving/tree/master/0178-rank-scores) |
 | [0180-consecutive-numbers](https://github.com/pggggggggh/Problem-Solving/tree/master/0180-consecutive-numbers) |
+| [1204-last-person-to-fit-in-the-bus](https://github.com/pggggggggh/Problem-Solving/tree/master/1204-last-person-to-fit-in-the-bus) |
 <!---LeetCode Topics End-->
