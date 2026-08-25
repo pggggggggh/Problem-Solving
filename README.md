@@ -149,4 +149,5 @@ This is an auto push repository for Baekjoon Online Judge created with [Baekjoon
 |  |
 | ------- |
 | [0175-combine-two-tables](https://github.com/pggggggggh/Problem-Solving/tree/master/0175-combine-two-tables) |
+| [0178-rank-scores](https://github.com/pggggggggh/Problem-Solving/tree/master/0178-rank-scores) |
 <!---LeetCode Topics End-->
